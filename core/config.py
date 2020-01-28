@@ -49,6 +49,8 @@ def _create_config_part(name, data):
 
 
 def create_config(data):
+    if not data:
+        return Config('root')
     return _create_config_part('root', data)
 
 
@@ -75,8 +77,18 @@ class Config(ConfigComponent):
 
     def set_param(self, param_path, value):
         path = parse_path(param_path)
+        param = path[0]
         part_path = path[1] if len(path) == 2 else None
-        self._children[path[0]].set_param(param_path, value)
+        if part_path is None:
+            cfg_p = ConfigParam(param, value)
+            self._children[param] = cfg_p
+            return
+        if param in self._children.keys():
+            self._children[param].set_param(part_path, value)
+        else:
+            cfg = Config(param)
+            cfg.set_param(part_path, value)
+            self._children[param] = cfg
 
     def get_param(self, param_path):
         if param_path is None:
