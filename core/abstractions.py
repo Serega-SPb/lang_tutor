@@ -22,10 +22,6 @@ class AbstractModuleInit(ABC):
 
 class AbstractQuestionGenerator(ABC):
 
-    # @abstractmethod
-    # def get_question_types(self):
-    #     pass
-
     @abstractmethod
     def get_questions(self, quest_type):
         pass
@@ -33,9 +29,14 @@ class AbstractQuestionGenerator(ABC):
 
 class AbstactExerciseFactory(ABC):
 
-    @abstractmethod
+    QUEST_GENERATOR_CL = AbstractQuestionGenerator
+
     def create_exercises(self, scenario, quest_type, ex_with_opt):
-        pass
+        self.quest_gen = self.QUEST_GENERATOR_CL(scenario)
+        quests = self.quest_gen.get_questions(quest_type)
+
+        return self._create_exercise_opt(quests) if ex_with_opt \
+            else self._create_exercise(quests)
 
     @abstractmethod
     def _create_exercise(self, data):

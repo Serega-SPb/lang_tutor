@@ -1,2 +1,4 @@
 modules:
   module_kanji: true
+modules_dir: modules
+scenarios_dir: scenarios
