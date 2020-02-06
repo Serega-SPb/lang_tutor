@@ -11,14 +11,7 @@ class KanjiExerciseFactory(AbstactExerciseFactory):
 
     def __init__(self):
         self.logger = logging.getLogger(LOGGER_NAME)
-        self.quest_gen = None
-
-    def create_exercises(self, scenario, quest_type, ex_with_opt=True):
-        self.quest_gen = KanjiQuestionGenerator(scenario)
-        quests = self.quest_gen.get_questions(quest_type)
-
-        return self._create_exercise_opt(quests) if ex_with_opt \
-            else self._create_exercise(quests)
+        self.QUEST_GENERATOR_CL = KanjiQuestionGenerator
 
     def _create_exercise(self, data):
         result = []

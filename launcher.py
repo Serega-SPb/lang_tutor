@@ -5,18 +5,23 @@ def get_exercises(loader):
     exercises = []
     scen_name = input('scenario\n')
     scen = loader.scenarios[scen_name]
+    opt_enb = True
 
-    for m, bl in scen.data.items():
+    for m, bl in scen.get_data().items():
         mod = loader.modules[m].init
         print(mod.get_question_types())
         q_type = input('quest type:\n')
-        exercises.extend(mod.get_exercises(bl, q_type))
+        exercises.extend(mod.get_exercises(bl, q_type, opt_enb))
 
     results = []
 
     for ex in exercises:
-        ans = int(input(str(ex))) - 1
-        results.append(ex.check_answer(ex.options_answers[ans]))
+        ans = input(str(ex))
+        if opt_enb:
+            ans = int(ans) - 1
+            results.append(ex.check_answer(ex.options_answers[ans]))
+        else:
+            results.append(ex.check_answer(ans))
 
     print(f'Results {sum(map(lambda x: x, results))}/{len(results)}')
 
@@ -50,5 +55,22 @@ def main():
     pass
 
 
+def main_ui():
+    from PyQt5.QtWidgets import QApplication
+    from ui.main_view import MainView
+    from ui.main_model import MainModel
+    from ui.main_controller import MainController
+
+    app = QApplication([])
+
+    model = MainModel()
+    controller = MainController(model)
+    view = MainView(model, controller)
+
+    view.show()
+    app.exec_()
+
+
 if __name__ == '__main__':
-    main()
+    main_ui()
+    # main()
