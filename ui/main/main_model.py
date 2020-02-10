@@ -1,6 +1,6 @@
 from core.data_loader import DataLoader
 
-from .ui_messaga_bus import Event
+from ui.ui_messaga_bus import Event
 
 
 class MainModel:

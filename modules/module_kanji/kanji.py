@@ -8,7 +8,9 @@ class Kanji:
         self.key = key
         self.value = value
         self.dash_count = dash_count
-        self.on = self.kun = self.translate = []
+        self.on = []
+        self.kun = []
+        self.translate = []
 
     def __eq__(self, other):
         if not isinstance(other, Kanji):

@@ -19,6 +19,14 @@ class AbstractModuleInit(ABC):
     def deserialize_block(self, data):
         pass
 
+    @abstractmethod
+    def get_exercise_widget(self):
+        pass
+
+    @abstractmethod
+    def get_exercise_opt_widget(self):
+        pass
+
 
 class AbstractQuestionGenerator(ABC):
 
