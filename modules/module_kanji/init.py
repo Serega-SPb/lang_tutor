@@ -22,3 +22,9 @@ class Init(AbstractModuleInit):
 
     def deserialize_block(self, data):
         return self.__scenario_serializer.deserialize(data)
+
+    def get_exercise_widget(self):
+        pass
+
+    def get_exercise_opt_widget(self):
+        pass

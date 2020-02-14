@@ -57,9 +57,9 @@ def main():
 
 def main_ui():
     from PyQt5.QtWidgets import QApplication
-    from ui.main_view import MainView
-    from ui.main_model import MainModel
-    from ui.main_controller import MainController
+    from ui.main.main_view import MainView
+    from ui.main.main_model import MainModel
+    from ui.main.main_controller import MainController
 
     app = QApplication([])
 

@@ -21,7 +21,7 @@ class MainController:
         self.data_loader.load_scenarios()
         self.model.scenarios_changed.emit()
 
-    def start_scenario(self, scenario):
+    def start_scenario(self, scenario, opt_enb):
         self.logger.debug(f'Start {scenario.name}')
         check_mod = all([self.data_loader.modules[r_mod].init is not None
                          for r_mod in scenario.required_modules])
@@ -29,6 +29,8 @@ class MainController:
             self.logger.debug('Not all required modules are enabled')
             QMessageBox.warning(None, 'Warning', 'Not all required modules are enabled')
             return
-        sc_data = scenario.get_data()
-        self.logger.debug(sc_data)
-        # TODO generate and start exercise screen
+
+        if hasattr(self, 'sc_controller'):
+            self.sc_controller.load_scenario(scenario, 'translate_quests', opt_enb)
+        else:
+            self.logger.debug('SCENARIO CONTROLLER NOT FOUND')
