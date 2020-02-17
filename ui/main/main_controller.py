@@ -1,9 +1,8 @@
 import logging
 
-from PyQt5.QtWidgets import QMessageBox
-
 from core.data_loader import DataLoader
 from core.log_config import LOGGER_NAME
+from ui.cross_widget_events import CrossWidgetEvents
 
 
 class MainController:
@@ -27,10 +26,8 @@ class MainController:
                          for r_mod in scenario.required_modules])
         if not check_mod:
             self.logger.debug('Not all required modules are enabled')
-            QMessageBox.warning(None, 'Warning', 'Not all required modules are enabled')
+            CrossWidgetEvents.show_message_event.emit('W', 'Warning', 'Not all required modules are enabled')
             return
 
-        if hasattr(self, 'sc_controller'):
-            self.sc_controller.load_scenario(scenario, 'translate_quests', opt_enb)
-        else:
-            self.logger.debug('SCENARIO CONTROLLER NOT FOUND')
+        CrossWidgetEvents.load_scenario_event.emit(scenario, 'translate_quests', opt_enb)
+        CrossWidgetEvents.change_screen_event.emit(1)

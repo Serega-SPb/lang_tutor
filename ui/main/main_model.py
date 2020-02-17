@@ -18,5 +18,3 @@ class MainModel:
     @property
     def scenarios(self):
         return self.data_loader.scenarios.values()
-
-    # TODO ? propertiess: current_scenario | exercises | current exercise

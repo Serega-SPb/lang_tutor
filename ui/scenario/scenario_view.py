@@ -1,13 +1,10 @@
 from PyQt5.QtWidgets import QWidget
 
 from .scenario_view_ui import Ui_Form
-from ui.ui_messaga_bus import Event
 from ui.exercise_ui_manager import ExerciseManager
 
 
 class ScenarioView(QWidget):
-
-    returnToMenuEvent = Event()
 
     def __init__(self, model, controller, parent=None):
         super().__init__(parent)
@@ -25,7 +22,7 @@ class ScenarioView(QWidget):
         self.connect_model_signals()
 
     def init_ui(self):
-        self.ui.backMenuBtn.clicked.connect(lambda x: self.returnToMenuEvent.emit())
+        self.ui.backMenuBtn.clicked.connect(self.controller.back_to_menu)
         self.ui.totalLbl.setText(str(self.model.total))
 
     def connect_widgets(self):
@@ -34,7 +31,7 @@ class ScenarioView(QWidget):
 
     def connect_model_signals(self):
         self.model.name_changed += lambda x: self.ui.scenarioLbl.setText(x)
-        self.model.scenario_ended += self.returnToMenuEvent.emit
+        self.model.scenario_ended += self.controller.back_to_menu
         self.model.scenario_loaded += self.set_counter
         self.model.current_exercise_changed += self.load_exercise
 
