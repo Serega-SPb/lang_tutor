@@ -1,8 +1,7 @@
 import random
 
-from PyQt5.QtWidgets import QMessageBox
-
 from core.data_loader import DataLoader
+from ui.cross_widget_events import CrossWidgetEvents
 
 
 class ScenarioController:
@@ -11,6 +10,7 @@ class ScenarioController:
         super().__init__()
         self.model = model
         self.data_loader = DataLoader()
+        CrossWidgetEvents.load_scenario_event += self.load_scenario
 
     def load_scenario(self, scenario, q_type, opt_enb=True):  # ?
         self.model.name = scenario.name
@@ -26,5 +26,9 @@ class ScenarioController:
         self.model.check_answer(answer)
 
     def end_scenario(self):
-        QMessageBox.information(None, 'Results', f'Correct answers: {self.model.correct_count}/{self.model.total}')
+        msg = f'Correct answers: {self.model.correct_count}/{self.model.total}'
+        CrossWidgetEvents.show_message_event.emit('I', 'Results', msg)
         self.model.scenario_ended.emit()
+
+    def back_to_menu(self, *args):
+        CrossWidgetEvents.change_screen_event.emit(0)

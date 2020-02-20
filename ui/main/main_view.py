@@ -1,15 +1,12 @@
 import logging
 
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem
+from PyQt5.QtWidgets import QWidget, QListWidgetItem
 
 from core import log_config
 from core.data_loader import DataLoader
 from core.decorators import try_except_wrapper
 from ui.additional_widgets import ModuleWidget, ScenarioWidget
-from .main_view_ui import Ui_MainWindow
-from ui.scenario.scenario_view import ScenarioView
-from ui.scenario.scenario_model import ScenarioModel
-from ui.scenario.scenario_controller import ScenarioController
+from .main_view_ui import Ui_Form
 
 
 def load_data_in_list(list_wid, data_wid, data):
@@ -35,7 +32,7 @@ class UiLogHandler(logging.Handler):
         self.widget.appendPlainText(msg)
 
 
-class MainView(QMainWindow):
+class MainView(QWidget):
 
     def __init__(self, model, controller, parent=None):
         super().__init__(parent)
@@ -43,7 +40,7 @@ class MainView(QMainWindow):
         self.model = model
         self.controller = controller
 
-        self.ui = Ui_MainWindow()
+        self.ui = Ui_Form()
         self.ui.setupUi(self)
 
         self.data_loader = DataLoader()
@@ -55,7 +52,6 @@ class MainView(QMainWindow):
         self.connect_model_signals()
 
         self.loads()
-        self.init_exercise_widget()
 
     @property
     def options_enabled(self):
@@ -66,14 +62,6 @@ class MainView(QMainWindow):
             self.data_loader.get_config_param('ui.options_enabled') or False)
         self.controller.reload_modules()
         self.controller.reload_scenarios()
-
-    def init_exercise_widget(self):  # TODO temp solution
-        sc_model = ScenarioModel()
-        sc_controller = ScenarioController(sc_model)
-        self.controller.sc_controller = sc_controller
-        self.scenario_widget = ScenarioView(sc_model, sc_controller, self)
-        self.scenario_widget.returnToMenuEvent += lambda: self.ui.mainStackWidget.setCurrentIndex(0)
-        self.ui.exercisesLayout.addWidget(self.scenario_widget)
 
     def init_ui(self):
         self.ui.starScenarioBtn.setEnabled(False)
@@ -126,4 +114,3 @@ class MainView(QMainWindow):
         if not hasattr(curr_item, 'data'):
             return
         self.controller.start_scenario(curr_item.data, self.options_enabled)
-        self.ui.mainStackWidget.setCurrentIndex(1)
