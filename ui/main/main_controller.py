@@ -2,7 +2,8 @@ import logging
 
 from core.data_loader import DataLoader
 from core.log_config import LOGGER_NAME
-from ui.cross_widget_events import CrossWidgetEvents
+from ui.cross_widget_events import CrossWidgetEvents as CrossEvent, \
+                                    MessageType as MsgType
 
 
 class MainController:
@@ -22,12 +23,13 @@ class MainController:
 
     def start_scenario(self, scenario, opt_enb):
         self.logger.debug(f'Start {scenario.name}')
-        check_mod = all([self.data_loader.modules[r_mod].init is not None
+        check_mod = all([self.data_loader.get_init(r_mod) is not None
                          for r_mod in scenario.required_modules])
         if not check_mod:
-            self.logger.debug('Not all required modules are enabled')
-            CrossWidgetEvents.show_message_event.emit('W', 'Warning', 'Not all required modules are enabled')
+            msg = 'Not all required modules are enabled'
+            self.logger.debug(msg)
+            CrossEvent.show_message_event.emit(MsgType.WARN, 'Warning', msg)
             return
 
-        CrossWidgetEvents.load_scenario_event.emit(scenario, 'translate_quests', opt_enb)
-        CrossWidgetEvents.change_screen_event.emit(1)
+        CrossEvent.load_scenario_event.emit(scenario, opt_enb)
+        CrossEvent.change_screen_event.emit(1)

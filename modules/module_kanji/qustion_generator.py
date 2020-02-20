@@ -25,9 +25,6 @@ class KanjiQuestionGenerator(AbstractQuestionGenerator):
             QuestionTypes.READING_QUESTS: self.get_reading_questions,
         }
 
-    # def get_question_types(self):
-    #     return self.quest_types.keys()
-
     def get_questions(self, quest_type):
         return self.quest_types[quest_type]() \
             if quest_type in self.quest_types.keys() else None

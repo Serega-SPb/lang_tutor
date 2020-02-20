@@ -14,7 +14,7 @@ class ExerciseManager(metaclass=Singleton):
         if mod_name not in self.data_loader.modules:
             self.logger.warning(f'Module {mod_name} not found')
             return
-        mod_init = self.data_loader.modules[mod_name].init
+        mod_init = self.data_loader.get_init(mod_name)
 
         if isinstance(exercise, ExerciseWithOptions):
             widget = mod_init.get_exercise_opt_widget() or ExerciseOptWidget

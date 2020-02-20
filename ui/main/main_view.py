@@ -34,6 +34,8 @@ class UiLogHandler(logging.Handler):
 
 class MainView(QWidget):
 
+    OPTIONS_ENABLED_PARAM = 'ui.options_enabled'
+
     def __init__(self, model, controller, parent=None):
         super().__init__(parent)
 
@@ -51,24 +53,17 @@ class MainView(QWidget):
         self.connect_widgets()
         self.connect_model_signals()
 
-        self.loads()
-
-    @property
-    def options_enabled(self):
-        return self.ui.optionsEnableChbx.isChecked()
-
-    def loads(self):
-        self.ui.optionsEnableChbx.setChecked(
-            self.data_loader.get_config_param('ui.options_enabled') or False)
-        self.controller.reload_modules()
-        self.controller.reload_scenarios()
+        self.load_modules()
+        self.load_scenarios()
 
     def init_ui(self):
         self.ui.starScenarioBtn.setEnabled(False)
+        self.ui.optionsEnableChbx.setChecked(
+            self.data_loader.get_config_param(self.OPTIONS_ENABLED_PARAM) or False)
         self.ui.scenarioList.currentItemChanged.connect(
             lambda x: self.ui.starScenarioBtn.setEnabled(True if x else False))
         self.ui.optionsEnableChbx.toggled['bool'].connect(
-            lambda x: self.save_ui_config('ui.options_enabled', x))
+            lambda x: self.save_ui_config(self.OPTIONS_ENABLED_PARAM, x))
 
         self.ui.scenarioMenuBtn.clicked.connect(lambda: self.select_screen(1))
         self.ui.editorMenuBtn.clicked.connect(lambda: self.select_screen(0))
@@ -111,6 +106,5 @@ class MainView(QWidget):
     @try_except_wrapper
     def on_start_click(self, *args):
         curr_item = self.ui.scenarioList.currentItem()
-        if not hasattr(curr_item, 'data'):
-            return
-        self.controller.start_scenario(curr_item.data, self.options_enabled)
+        options_enabled = self.ui.optionsEnableChbx.isChecked()
+        self.controller.start_scenario(curr_item.data, options_enabled)
