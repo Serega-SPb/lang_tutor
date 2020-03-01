@@ -9,7 +9,7 @@ from .config import create_config, Config
 from .decorators import try_except_wrapper
 from .log_config import LOGGER_NAME
 from .module import Module
-from .scenario import Scenario
+from .scenario import Scenario, ScenarioData
 from .metaclasses import Singleton
 
 
@@ -17,12 +17,12 @@ class Constants:
     MODULES = 'modules'
     MODULE = 'module'
     DATA = 'data'
+    QUESTION_TYPE = 'question_type'
     MODULES_DIR = 'modules_dir'
     SCENARIOS_DIR = 'scenarios_dir'
 
 
 class DataLoader(metaclass=Singleton):
-
     __user_config = None
     __user_configs_file = 'config.yaml'
 
@@ -34,8 +34,8 @@ class DataLoader(metaclass=Singleton):
     def __init__(self):
         self.logger = logging.getLogger(LOGGER_NAME)
         self.load_config()
-        # self.load_modules()
-        # self.load_scenarios()
+        self.load_modules()
+        self.load_scenarios()
 
     @property
     def modules_dir(self):
@@ -72,6 +72,7 @@ class DataLoader(metaclass=Singleton):
     def set_config_param(self, param, value):
         self.__user_config.set_param(param, value)
         self.save_config()
+
     # endregion
 
     # region Module
@@ -87,14 +88,14 @@ class DataLoader(metaclass=Singleton):
             self.__user_config.add(mod_cfg)
 
         mods = mod_cfg.get_children()
-        for d in os.listdir(self.modules_dir):
-            m = mod_cfg.get_param(d)
-            if m is None or m is True:
-                self.activate_module(d)
-            else:  # TODO need fix
-                mod = Module(d)
-                mod.enable_changed += lambda b: self.on_enabled_changed(mod.name, b)
-                self.modules[d] = mod
+        for m_dir in os.listdir(self.modules_dir):
+            mod = Module(m_dir)
+            mod.enable_changed += lambda b: self.on_enabled_changed(mod.name, b)
+            self.modules[m_dir] = mod
+
+            mod_status = mod_cfg.get_param(m_dir)
+            if mod_status is None or mod_status is True:
+                self.activate_module(m_dir)
 
     @try_except_wrapper
     def activate_module(self, mod_name):
@@ -104,9 +105,7 @@ class DataLoader(metaclass=Singleton):
         mod_init = importlib.import_module(f'{self.modules_dir}.{mod_name}.init').Init()
         mod = self.modules.get(mod_name)
         if mod is None:
-            mod = Module(mod_name, init=mod_init, is_enabled=True)
-            mod.enable_changed += lambda b: self.on_enabled_changed(mod.name, b)
-            self.modules[mod_name] = mod
+            raise Exception('Module not registered')
         mod.is_enabled = True
         mod.init = mod_init
 
@@ -115,26 +114,27 @@ class DataLoader(metaclass=Singleton):
         mods.set_param(mod_name, False)
         mod = self.modules.get(mod_name)
         if mod is None:
-            self.logger.warning(f'Module {mod_name} not found')
-            return
+            raise Exception('Module not registered')
         mod.is_enabled = False
         mod.init = None
 
     def on_enabled_changed(self, mod_name, value):
-        self.logger.debug(f'Status changed to {value}')
-        if value:
-            self.activate_module(mod_name)
-        else:
-            self.deactivate_module(mod_name)
+        self.logger.debug(f'Status {mod_name} changed to {value}')
+        self.activate_module(mod_name) if value \
+            else self.deactivate_module(mod_name)
         self.save_config()
+
+    def get_init(self, mod_name):
+        return self.modules.get(mod_name).init
+
     # endregion
 
+    @try_except_wrapper
     def load_scenarios(self):
         self.scenarios.clear()
         sc_dir = self.scenarios_dir
         if not os.path.isdir(sc_dir):
-            self.logger.warning('Scenarios directory not found')
-            return
+            raise NotADirectoryError('Scenario directory not found')
 
         for f in os.listdir(sc_dir):
             self.__load_scenario(os.path.join(sc_dir, f))
@@ -146,20 +146,17 @@ class DataLoader(metaclass=Singleton):
 
         scenario_name = os.path.basename(file).split('.')[0]
         req_mods = []
-        sc_data = {}
-        sc_lazies = {}
+        sc_data = []
         for bl in content:
             mod_name = bl[Constants.MODULE]
-            mod = self.modules.get(mod_name)
-            if mod is None:
+            mod_init = self.get_init(mod_name)
+            if mod_init is None:
                 self.logger.warning(f'Module {mod_name} not found')
                 continue
-            # if mod.init is None:
-            #     self.logger.warning(f'Module {mod_name} not loaded')
-            #     continue
 
             req_mods.append(mod_name)
-            sc_lazies[mod_name] = lambda: mod.init.deserialize_block(bl[Constants.DATA])
+            lazy_init = lambda: mod_init.deserialize_block(bl[Constants.DATA])
+            sc_data.append(ScenarioData(mod_name, bl[Constants.QUESTION_TYPE], lazy_init))
 
-        scenario = Scenario(scenario_name, required_modules=req_mods, lazies=sc_lazies)
+        scenario = Scenario(scenario_name, required_modules=req_mods, scenario_data=sc_data)
         self.scenarios[scenario_name] = scenario

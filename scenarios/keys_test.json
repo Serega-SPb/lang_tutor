@@ -1,6 +1,7 @@
 [
 	{
 		"module": "module_kanji",
+		"question_type": "key_quests",
 		"data": [
 			{
 				"key": 1,

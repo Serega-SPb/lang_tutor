@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, \
 
 from core.metaclasses import Singleton
 from ui import main as main_widget, scenario as scenario_widget
-from ui.cross_widget_events import CrossWidgetEvents
+from ui.cross_widget_events import CrossWidgetEvents, MessageType as MsgType
 
 
 class AppManager(metaclass=Singleton):
@@ -17,8 +17,8 @@ class AppManager(metaclass=Singleton):
     ]
 
     MSB_TYPE = {
-        'I': QMessageBox.information,
-        'W': QMessageBox.warning,
+        MsgType.INFO: QMessageBox.information,
+        MsgType.WARN: QMessageBox.warning,
     }
 
     def __init__(self):
@@ -63,5 +63,5 @@ class AppManager(metaclass=Singleton):
 
     def show_info_msb(self, t, title, message):
         if t not in self.MSB_TYPE.keys():
-            t = 'I'
+            t = MsgType.INFO
         self.MSB_TYPE[t](self.main_window, title, message)
