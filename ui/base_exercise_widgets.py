@@ -3,60 +3,72 @@ from PyQt5.QtWidgets import QWidget, QGridLayout, QVBoxLayout, QLineEdit, \
     QLabel, QGroupBox, QRadioButton
 
 
-class ExerciseWidget(QWidget):
+QUEST_LBL_CSS = '''
+font-size: 18px
+'''
+
+QUEST_KAN_LBL_CSS = '''
+font-family: "Yu Mincho";
+font-size: 60pt
+'''
+
+
+class BaseExerciseWidget(QWidget):
 
     def __init__(self, exercise, parent=None):
         super().__init__(parent)
         self.data = exercise
-        self.init_ui()
+        self.__init_ui()
 
-    def init_ui(self):
-        grid = QGridLayout(self)
-        self.setLayout(grid)
+    def __init_ui(self):
+        self.grid = QGridLayout(self)
+        self.setLayout(self.grid)
 
+        self._init_quest_field()
+        self._init_answer_field()
+
+    def _init_quest_field(self):
         self.questLbl = QLabel(self)
-        self.questLbl.setStyleSheet('font-weight: bold; font-size: 22px')
+        style = QUEST_LBL_CSS if len(self.data.question) > 1 else QUEST_KAN_LBL_CSS
+        self.questLbl.setStyleSheet(style)
         self.questLbl.setAlignment(Qt.AlignCenter)
         self.questLbl.setText(self.data.question)
-        grid.addWidget(self.questLbl, 0, 0, 1, 1)
+        self.grid.addWidget(self.questLbl, 0, 0, 1, 1)
 
+    def _init_answer_field(self):
+        pass
+
+
+class ExerciseWidget(BaseExerciseWidget):
+
+    def _init_answer_field(self):
         self.answerLnEd = QLineEdit(self)
-        grid.addWidget(self.answerLnEd, 1, 0, 1, 1)
+        self.grid.addWidget(self.answerLnEd, 1, 0, 1, 1)
 
     @property
     def answer(self):
         return self.answerLnEd.text()
 
 
-class ExerciseOptWidget(QWidget):
+class ExerciseOptWidget(BaseExerciseWidget):
 
     def __init__(self, exercise, parent=None):
-        super().__init__(parent)
-        self.data = exercise
-        self.init_ui()
+        super().__init__(exercise, parent)
         self.answer_btn = None
 
-    def init_ui(self):
-        grid = QGridLayout(self)
-        self.setLayout(grid)
-
-        self.questLbl = QLabel(self)
-        self.questLbl.setStyleSheet('font-weight: bold; font-size: 22px')
-        self.questLbl.setAlignment(Qt.AlignCenter)
-        self.questLbl.setText(self.data.question)
-        grid.addWidget(self.questLbl, 0, 0, 1, 1)
-
+    def _init_answer_field(self):
         self.answersGroup = QGroupBox(self)
         v_box = QVBoxLayout(self.answersGroup)
         self.answersGroup.setLayout(v_box)
         for i, opt in enumerate(self.data.options_answers):
             raddbtn = QRadioButton()
+            raddbtn.setStyleSheet(QUEST_LBL_CSS)
             raddbtn.setText(', '.join(opt))
             raddbtn.data = opt
 
             raddbtn.toggled.connect(lambda x: self.rbtn_toggled_handler(raddbtn.sender(), x))
             v_box.addWidget(raddbtn)
-        grid.addWidget(self.answersGroup, 1, 0, 1, 1)
+        self.grid.addWidget(self.answersGroup, 1, 0, 1, 1)
 
     @property
     def answer(self):

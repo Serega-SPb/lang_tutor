@@ -76,9 +76,7 @@ class Config(ConfigComponent):
             if item in self._children.keys() else None
 
     def set_param(self, param_path, value):
-        path = parse_path(param_path)
-        param = path[0]
-        part_path = path[1] if len(path) == 2 else None
+        param, part_path = parse_path(param_path)
         if part_path is None:
             cfg_p = ConfigParam(param, value)
             self._children[param] = cfg_p
