@@ -5,6 +5,7 @@ class QuestionTypes:
     KEY_QUESTS = 'key_quests'
     TRANSLATE_QUESTS = 'translate_quests'
     READING_QUESTS = 'reading_quests'
+    # TODO ? add types RU->JP | JP->RU
 
     @staticmethod
     def get_types():

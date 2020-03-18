@@ -1,5 +1,4 @@
 import os
-import importlib
 import logging
 import json
 
@@ -33,6 +32,7 @@ class DataLoader(metaclass=Singleton):
 
     def __init__(self):
         self.logger = logging.getLogger(LOGGER_NAME)
+        Module.get_mod_dir = lambda x: self.modules_dir
         self.load_config()
         self.load_modules()
         self.load_scenarios()
@@ -90,45 +90,21 @@ class DataLoader(metaclass=Singleton):
         mods = mod_cfg.get_children()
         for m_dir in os.listdir(self.modules_dir):
             mod = Module(m_dir)
-            mod.enable_changed += lambda b: self.on_enabled_changed(mod.name, b)
+            mod.enable_changed += lambda b: self.on_mod_status_changed(mod_cfg, m_dir, b)
             self.modules[m_dir] = mod
-
-            mod_status = mod_cfg.get_param(m_dir)
-            if mod_status is None or mod_status is True:
-                self.activate_module(m_dir)
-
-    @try_except_wrapper
-    def activate_module(self, mod_name):
-        mods = self.get_config_param(Constants.MODULES)
-        mods.set_param(mod_name, True)
-
-        mod_init = importlib.import_module(f'{self.modules_dir}.{mod_name}.init').Init()
-        mod = self.modules.get(mod_name)
-        if mod is None:
-            raise Exception('Module not registered')
-        mod.is_enabled = True
-        mod.init = mod_init
-
-    def deactivate_module(self, mod_name):
-        mods = self.get_config_param(Constants.MODULES)
-        mods.set_param(mod_name, False)
-        mod = self.modules.get(mod_name)
-        if mod is None:
-            raise Exception('Module not registered')
-        mod.is_enabled = False
-        mod.init = None
-
-    def on_enabled_changed(self, mod_name, value):
-        self.logger.debug(f'Status {mod_name} changed to {value}')
-        self.activate_module(mod_name) if value \
-            else self.deactivate_module(mod_name)
-        self.save_config()
+            mod.is_enabled = mod_cfg.get_param(m_dir) or True
 
     def get_init(self, mod_name):
         return self.modules.get(mod_name).init
 
+    def on_mod_status_changed(self, mod_cfg, mod_name, value):
+        self.logger.debug(f'Status {mod_name} changed to {value}')
+        mod_cfg.set_param(mod_name, value)
+        self.save_config()
+
     # endregion
 
+    # region Module
     @try_except_wrapper
     def load_scenarios(self):
         self.scenarios.clear()
@@ -160,3 +136,5 @@ class DataLoader(metaclass=Singleton):
 
         scenario = Scenario(scenario_name, required_modules=req_mods, scenario_data=sc_data)
         self.scenarios[scenario_name] = scenario
+
+    # endregion
