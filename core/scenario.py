@@ -8,6 +8,12 @@ class ScenarioData:
         self.lazy_init = lazy_init
         self._data = None
 
+    @classmethod
+    def empty_init(cls, mod_name):
+        ins = cls(mod_name, '', None)
+        ins._data = []
+        return ins
+
     @property
     def data(self):
         if self._data is None:

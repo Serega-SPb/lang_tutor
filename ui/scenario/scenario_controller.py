@@ -1,6 +1,7 @@
 import random
 
 from core.data_loader import DataLoader
+from ui.cross_widget_events import ScreenIndex as ScI
 from ui.cross_widget_events import CrossWidgetEvents, MessageType as MsgType
 
 
@@ -32,4 +33,4 @@ class ScenarioController:
         self.model.scenario_ended.emit()
 
     def back_to_menu(self, *args):
-        CrossWidgetEvents.change_screen_event.emit(0)
+        CrossWidgetEvents.change_screen_event.emit(ScI.MAIN)

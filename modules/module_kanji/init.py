@@ -4,6 +4,7 @@ from .qustion_generator import QuestionTypes
 from .exercise_factory import KanjiExerciseFactory
 from .serializer import KanjiScenarioSerilizer
 from .storage import KanjiStorage
+from .editor import init as editor_block
 
 
 class Init(AbstractModuleInit):
@@ -28,3 +29,6 @@ class Init(AbstractModuleInit):
 
     def get_exercise_opt_widget(self):
         pass
+
+    def get_editor_block_widget(self):
+        return editor_block()

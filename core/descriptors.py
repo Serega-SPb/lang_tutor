@@ -1,10 +1,10 @@
 class NotifyProperty:
     __slots__ = ('name', 'value', 'subscribers')
 
-    def __init__(self, name):
+    def __init__(self, name, default_value=None):
         self.name = name
         self.subscribers = []
-        self.value = None
+        self.value = default_value
 
     def get(self):
         return self.value

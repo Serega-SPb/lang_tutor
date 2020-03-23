@@ -13,7 +13,6 @@ class KanjiStorage(metaclass=Singleton):
 
     __kanji_keys_file = 'KanjiKeys.json'
     kanji_keys = {}
-    scenario_kanji = []  # ?
 
     def __init__(self):
         self.logger = logging.getLogger(LOGGER_NAME)
