@@ -62,12 +62,14 @@ class ScenarioDataWidget(QWidget):
         self.rem_action = remove_action
         self.ui()
 
+        self.sc_data.quest_type_changed += self.update_title
+        self.titleLbl.destroyed.connect(self.unsubscribe)
+
     def ui(self):
         grid = QGridLayout(self)
 
         self.titleLbl = QLabel()
-        title_txt = f'{self.sc_data.module_name} | {self.sc_data.quest_type}'
-        self.titleLbl.setText(title_txt)
+        self.update_title()
         grid.addWidget(self.titleLbl)
 
         self.countLbl = QLabel()
@@ -80,3 +82,10 @@ class ScenarioDataWidget(QWidget):
         self.removeBtn.setFixedSize(25, 25)
         self.removeBtn.clicked.connect(lambda: self.rem_action(self.sc_data))
         grid.addWidget(self.removeBtn, 0, 4, 0, 1)
+
+    def update_title(self, *args):
+        title_txt = f'{self.sc_data.module_name} | {self.sc_data.quest_type}'
+        self.titleLbl.setText(title_txt)
+
+    def unsubscribe(self):
+        self.sc_data.quest_type_changed -= self.update_title

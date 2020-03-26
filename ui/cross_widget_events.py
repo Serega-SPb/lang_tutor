@@ -23,3 +23,4 @@ class CrossWidgetEvents:
     load_scenario_event = Event(object, str, bool)
     show_message_event = Event(str, str, str)
     start_editor_event = Event(EditorMode, list)
+    reload_scenarios_event = Event()

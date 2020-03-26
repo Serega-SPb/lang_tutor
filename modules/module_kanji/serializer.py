@@ -14,8 +14,7 @@ class KanjiScenarioSerilizer(AbstractScenarioSerializer):
         for d in m_data:
             if not isinstance(d, Kanji):
                 continue
-            sc_part = {attr: getattr(d, attr)
-                       for attr in d.__slots__ if attr != self.KEY_ATTR}
+            sc_part = {attr: getattr(d, attr) for attr in d.__slots__}
             sc_part[self.KEY_ATTR] = getattr(d, self.KEY_ATTR).number
             result.append(sc_part)
         return result

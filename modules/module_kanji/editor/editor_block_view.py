@@ -21,8 +21,7 @@ class EditorBlockView(QWidget):
         self.connect_model_signals()
 
     def init_ui(self):
-        self.ui.kanjiList.currentItemChanged.connect(
-            lambda x: self.controller.select_kanji(x.data if x else None))
+        self.ui.kanjiList.currentItemChanged.connect(self.select_kanji)
         self.ui.kanjiContainer.setEnabled(False)
         self.ui.keyCmbBx = KeyComboBox.morph_from(self.ui.keyCmbBx)
         self.ui.horizontalLayout_4.addWidget(self.ui.keyCmbBx)
@@ -33,7 +32,7 @@ class EditorBlockView(QWidget):
         self.ui.questTypeCmbBx.currentTextChanged.connect(self.controller.set_quest_type)
         self.ui.keyCmbBx.currentIndexChanged.connect(self.select_key)
 
-        self.ui.kanjiLnEd.textChanged.connect(self.controller.set_kanji_value)
+        self.ui.kanjiLnEd.textEdited.connect(self.controller.set_kanji_value)
         self.ui.dashCountSpBx.valueChanged.connect(self.controller.set_kanji_dash_count)
         self.ui.onReadingPte.textChanged.connect(
             lambda: self.controller.set_kanji_on_reading(self.ui.onReadingPte.toPlainText()))
@@ -57,6 +56,10 @@ class EditorBlockView(QWidget):
 
     def load_keys(self, values):
         self.ui.keyCmbBx.load_data(values)
+
+    def select_kanji(self, item):
+        self.controller.set_kanji_index(self.ui.kanjiList.currentRow())
+        self.controller.select_kanji(item.data if item else None)
 
     def load_kanjis(self, values):
         self.ui.kanjiList.clear()
@@ -91,7 +94,7 @@ class EditorBlockView(QWidget):
     def update_lbl(self):
         i = self.ui.kanjiList.currentItem()
         if i:
-            i.wid.update_lbl()
+            i.wid.update_title()
 
     def reset_kanji_container(self):
         self.ui.kanjiLnEd.clear()

@@ -13,6 +13,7 @@ class MainController:
         self.model = model
         self.data_loader = DataLoader()
         self.logger = logging.getLogger(LOGGER_NAME)
+        CrossEvent.reload_scenarios_event += self.reload_scenarios
 
     def reload_modules(self):
         self.data_loader.load_modules()

@@ -1,14 +1,17 @@
 from core.descriptors import NotifyProperty
+from core.memento import AddMemento, RemoveMemento
 from ui.ui_messaga_bus import Event
 
 
 class EditorModel:
 
     scenario_changed = Event(object)
+    scenario_name_changed = Event(str)
     can_undo_changed = Event(bool)
     can_redo_changed = Event(bool)
     blocks_changed = Event(list)
     block_widget_changed = Event(object)
+    update_scenario_event = Event()
 
     def __init__(self):
         self._scenario = NotifyProperty('scenario')
@@ -21,6 +24,7 @@ class EditorModel:
         self._blocks += self.blocks_changed.emit
         self._block_widget = NotifyProperty('_block_widget')
         self._block_widget += self.block_widget_changed.emit
+        self.update_scenario_event += self.update_scenario
 
     @property
     def scenario(self):
@@ -63,9 +67,19 @@ class EditorModel:
         self._block_widget.set(value)
 
     def append_scenario_data(self, sc_data):
-        self.scenario.scenario_data.append(sc_data)
+        prop_path = f'scenario_data.[{len(self.scenario.scenario_data)}]'
+        AddMemento(prop_path,self.update_scenario_event)\
+            (self.scenario.scenario_data.append)(sc_data)
         self.scenario_changed.emit(self.scenario)
 
     def remove_scenario_data(self, sc_data):
-        self.scenario.scenario_data.remove(sc_data)
+        prop_path = f'scenario_data.[{self.scenario.scenario_data.index(sc_data)}]'
+        RemoveMemento(prop_path, self.update_scenario_event)\
+            (self.scenario.scenario_data.remove)(sc_data)
         self.scenario_changed.emit(self.scenario)
+
+    def update_scenario(self):
+        self.scenario_changed.emit(self.scenario)
+
+    def update_scenario_name(self):
+        self.scenario_name_changed.emit(self.scenario.name)

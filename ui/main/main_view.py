@@ -123,6 +123,8 @@ class MainView(QWidget):
     @try_except_wrapper
     def load_scenarios(self):
         self.ui.scenarioList.clear()
+        self.ui.createFromList.clear()
+        self.ui.loadList.clear()
         scens = self.model.scenarios
         for sc in scens:
             load_data_in_list(self.ui.scenarioList, ScenarioWidget, sc)
