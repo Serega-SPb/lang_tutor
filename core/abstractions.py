@@ -27,6 +27,10 @@ class AbstractModuleInit(ABC):
     def get_exercise_opt_widget(self):
         pass
 
+    @abstractmethod
+    def get_editor_block_widget(self):
+        pass
+
 
 class AbstractQuestionGenerator(ABC):
 

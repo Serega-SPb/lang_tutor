@@ -1,22 +1,13 @@
 import logging
 
-from PyQt5.QtWidgets import QWidget, QListWidgetItem
+from PyQt5.QtWidgets import QWidget, QButtonGroup
 
 from core import log_config
 from core.data_loader import DataLoader
 from core.decorators import try_except_wrapper
-from ui.additional_widgets import ModuleWidget, ScenarioWidget
+from ui.additional_widgets import ModuleWidget, ScenarioWidget, load_data_in_list
+from ui.cross_widget_events import EditorMode
 from .main_view_ui import Ui_Form
-
-
-def load_data_in_list(list_wid, data_wid, data):
-    item = QListWidgetItem()
-    item.data = data
-    widget = data_wid(data, list_wid)
-
-    item.setSizeHint(widget.sizeHint())
-    list_wid.addItem(item)
-    list_wid.setItemWidget(item, widget)
 
 
 class UiLogHandler(logging.Handler):
@@ -30,6 +21,14 @@ class UiLogHandler(logging.Handler):
     def emit(self, record):
         msg = self.format(record)
         self.widget.appendPlainText(msg)
+
+
+class Menu:
+    DEFAULT = 0
+    SCENARIO = 1
+    MODULES = 2
+    DEBUG = 3
+    EDITOR = 4
 
 
 class MainView(QWidget):
@@ -65,12 +64,37 @@ class MainView(QWidget):
         self.ui.optionsEnableChbx.toggled['bool'].connect(
             lambda x: self.save_ui_config(self.OPTIONS_ENABLED_PARAM, x))
 
-        self.ui.scenarioMenuBtn.clicked.connect(lambda: self.select_screen(1))
-        self.ui.editorMenuBtn.clicked.connect(lambda: self.select_screen(0))
-        self.ui.modulesMenuBtn.clicked.connect(lambda: self.select_screen(2))
-        self.ui.configMenuBtn.clicked.connect(lambda: self.select_screen(0))
-        self.ui.debugMenuBtn.clicked.connect(lambda: self.select_screen(3))
+        self.init_menu()
+
+        self.ui.loadList.setVisible(False)
+        self.ui.createFromList.setVisible(False)
+        self.ui.createNewRbn.setChecked(True)
+        self.ui.createNewRbn.toggled.connect(
+            lambda: self.controller.set_editor_mode(EditorMode.CREATE_NEW))
+        self.ui.createFromRbn.toggled.connect(
+            lambda: self.controller.set_editor_mode(EditorMode.CREATE_FROM))
+        self.ui.loadRbn.toggled.connect(
+            lambda: self.controller.set_editor_mode(EditorMode.LOAD))
+        self.ui.startEditorBtn.clicked.connect(self.on_start_editor)
+
+    def init_menu(self):
+        self.menu_group = QButtonGroup()
+        btns = [self.ui.scenarioMenuBtn, self.ui.editorMenuBtn, self.ui.modulesMenuBtn,
+                self.ui.configMenuBtn, self.ui.debugMenuBtn]
+        for btn in btns:
+            btn.setCheckable(True)
+            self.menu_group.addButton(btn)
+
+        self.ui.scenarioMenuBtn.clicked.connect(lambda: self.select_screen(Menu.SCENARIO))
+        self.ui.editorMenuBtn.clicked.connect(lambda: self.select_screen(Menu.EDITOR))
+        # self.ui.editorMenuBtn.clicked.connect(lambda: CrossWidgetEvents.change_screen_event.emit(ScI.EDITOR))
+        self.ui.modulesMenuBtn.clicked.connect(lambda: self.select_screen(Menu.MODULES))
+        self.ui.configMenuBtn.clicked.connect(lambda: self.select_screen(Menu.DEFAULT))
+        self.ui.debugMenuBtn.clicked.connect(lambda: self.select_screen(Menu.DEBUG))
         # TODO ? statisticMenu ?
+        self.ui.scenarioMenuBtn.click()
+        # self.ui.scenarioMenuBtn.setChecked(True)
+        # self.select_screen(Menu.SCENARIO)
 
     def save_ui_config(self, path, value):
         self.data_loader.set_config_param(path, value)
@@ -99,12 +123,29 @@ class MainView(QWidget):
     @try_except_wrapper
     def load_scenarios(self):
         self.ui.scenarioList.clear()
+        self.ui.createFromList.clear()
+        self.ui.loadList.clear()
         scens = self.model.scenarios
         for sc in scens:
             load_data_in_list(self.ui.scenarioList, ScenarioWidget, sc)
+            load_data_in_list(self.ui.createFromList, ScenarioWidget, sc)
+            load_data_in_list(self.ui.loadList, ScenarioWidget, sc)
 
     @try_except_wrapper
     def on_start_click(self, *args):
         curr_item = self.ui.scenarioList.currentItem()
         options_enabled = self.ui.optionsEnableChbx.isChecked()
         self.controller.start_scenario(curr_item.data, options_enabled)
+
+    @try_except_wrapper
+    def on_start_editor(self, *args):
+        args = None
+        mode = self.model.editor_mode
+        if mode == EditorMode.CREATE_FROM:
+            items = self.ui.createFromList.selectedItems()
+            args = [i.data for i in items]
+            if len(args) == 0:
+                raise ValueError('Inccorect args')
+        elif mode == EditorMode.LOAD:
+            args = self.ui.loadList.currentItem().data
+        self.controller.start_editor(mode, args)

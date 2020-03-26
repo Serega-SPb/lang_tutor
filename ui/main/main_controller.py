@@ -2,6 +2,7 @@ import logging
 
 from core.data_loader import DataLoader
 from core.log_config import LOGGER_NAME
+from ui.cross_widget_events import ScreenIndex as ScI
 from ui.cross_widget_events import CrossWidgetEvents as CrossEvent, \
                                     MessageType as MsgType
 
@@ -12,6 +13,7 @@ class MainController:
         self.model = model
         self.data_loader = DataLoader()
         self.logger = logging.getLogger(LOGGER_NAME)
+        CrossEvent.reload_scenarios_event += self.reload_scenarios
 
     def reload_modules(self):
         self.data_loader.load_modules()
@@ -32,4 +34,12 @@ class MainController:
             return
 
         CrossEvent.load_scenario_event.emit(scenario, opt_enb)
-        CrossEvent.change_screen_event.emit(1)
+        CrossEvent.change_screen_event.emit(ScI.SCENARIO)
+
+    def set_editor_mode(self, value):
+        self.model.editor_mode = value
+
+    def start_editor(self, mode, *args):
+        CrossEvent.start_editor_event.emit(mode, *args)
+        CrossEvent.change_screen_event.emit(ScI.EDITOR)
+        pass

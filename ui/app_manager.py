@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, \
                             QStackedWidget, QMessageBox
 
 from core.metaclasses import Singleton
-from ui import main as main_widget, scenario as scenario_widget
+from ui import main as main_widget, scenario as scenario_widget, editor as editor_widget
 from ui.cross_widget_events import CrossWidgetEvents, MessageType as MsgType
 
 
@@ -13,7 +13,7 @@ class AppManager(metaclass=Singleton):
     WIDGETS = [
         main_widget,
         scenario_widget,
-        # 'editor'
+        editor_widget
     ]
 
     MSB_TYPE = {

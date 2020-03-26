@@ -104,7 +104,7 @@ class DataLoader(metaclass=Singleton):
 
     # endregion
 
-    # region Module
+    # region Scenario
     @try_except_wrapper
     def load_scenarios(self):
         self.scenarios.clear()
@@ -117,24 +117,47 @@ class DataLoader(metaclass=Singleton):
 
     @try_except_wrapper
     def __load_scenario(self, file):
+
+        def create_sc_data(block):
+            mod_name = block[Constants.MODULE]
+            mod_init = self.get_init(mod_name)
+            if mod_init is None:
+                self.logger.warning(f'Module {mod_name} not found')
+                return None
+            req_mods.add(mod_name)
+            lazy_init = lambda: mod_init.deserialize_block(block[Constants.DATA])
+            return ScenarioData(mod_name, block[Constants.QUESTION_TYPE], lazy_init)
+
         with open(file, 'r', encoding='utf-8') as reader:
             content = json.load(reader)
 
         scenario_name = os.path.basename(file).split('.')[0]
-        req_mods = []
+        req_mods = set()
         sc_data = []
         for bl in content:
-            mod_name = bl[Constants.MODULE]
-            mod_init = self.get_init(mod_name)
-            if mod_init is None:
-                self.logger.warning(f'Module {mod_name} not found')
-                continue
-
-            req_mods.append(mod_name)
-            lazy_init = lambda: mod_init.deserialize_block(bl[Constants.DATA])
-            sc_data.append(ScenarioData(mod_name, bl[Constants.QUESTION_TYPE], lazy_init))
+            data = create_sc_data(bl)
+            if data:
+                sc_data.append(data)
 
         scenario = Scenario(scenario_name, required_modules=req_mods, scenario_data=sc_data)
         self.scenarios[scenario_name] = scenario
 
+    def save_scenario(self, scenario):
+        file = os.path.join(self.scenarios_dir, f'{scenario.name}.json')
+        result = []
+        for sc_data in scenario.scenario_data:
+            mod_init = self.get_init(sc_data.module_name)
+            block = {
+                Constants.MODULE: sc_data.module_name,
+                Constants.QUESTION_TYPE: sc_data.quest_type,
+                Constants.DATA: mod_init.serialize_block(sc_data.data)
+            }
+            result.append(block)
+
+        with open(file, 'w', encoding='utf-8') as writer:
+            json.dump(result, writer)
+
+    def remove_scenario(self, scenario_name):
+        self.scenarios.pop(scenario_name)
+        os.remove(os.path.join(self.scenarios_dir, f'{scenario_name}.json'))
     # endregion

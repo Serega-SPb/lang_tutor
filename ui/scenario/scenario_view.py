@@ -22,10 +22,10 @@ class ScenarioView(QWidget):
         self.connect_model_signals()
 
     def init_ui(self):
-        self.ui.backMenuBtn.clicked.connect(self.controller.back_to_menu)
         self.ui.totalLbl.setText(str(self.model.total))
 
     def connect_widgets(self):
+        self.ui.backMenuBtn.clicked.connect(self.controller.back_to_menu)
         self.ui.answerBtn.clicked.connect(
             lambda x: self.controller.accept_answer(self.current_exercise_widget.answer))
 

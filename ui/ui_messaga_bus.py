@@ -12,6 +12,8 @@ class Event:
         self.arg_types = arg_types
 
     def __iadd__(self, func):
+        if not callable(func):
+            raise ValueError(f'{func.__name__} not callable')
         self.__subscribers.append(func)
         return self
 
