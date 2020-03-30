@@ -1,4 +1,3 @@
-from PyQt5.Qt import Qt
 from PyQt5.QtGui import QStandardItem
 from PyQt5.QtWidgets import QWidget, QGridLayout, QComboBox, QLabel
 
@@ -18,7 +17,7 @@ class KanjiWidget(QWidget):
         self.titleLbl.setStyleSheet('font-size: 18px')
         grid.addWidget(self.titleLbl)
 
-    def update_lbl(self):
+    def update_title(self):
         self.titleLbl.setText(self.kanji.value)
 
 

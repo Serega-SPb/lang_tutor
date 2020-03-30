@@ -1,16 +1,13 @@
 from core.abstractions import AbstractModuleInit
 from core.exercise_factory import ExerciseFactory
-
-from .qustion_generator import QuestionTypes, KanjiQuestionGenerator
-from .serializer import KanjiScenarioSerilizer
-from .storage import KanjiStorage
+from .question_generator import QuestionTypes, WordsQuestionGenerator
+from .serializer import WordsScenarioSerilizer
 from .editor import init as editor_block
 
 
 class Init(AbstractModuleInit):
-    __storage = KanjiStorage()
-    __exercise_factory = ExerciseFactory(KanjiQuestionGenerator)
-    __scenario_serializer = KanjiScenarioSerilizer()
+    __exercise_factory = ExerciseFactory(WordsQuestionGenerator)
+    __scenario_serializer = WordsScenarioSerilizer()
 
     def get_question_types(self):
         return QuestionTypes.get_types()

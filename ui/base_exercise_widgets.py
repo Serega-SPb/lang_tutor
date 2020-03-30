@@ -63,7 +63,7 @@ class ExerciseOptWidget(BaseExerciseWidget):
         for i, opt in enumerate(self.data.options_answers):
             raddbtn = QRadioButton()
             raddbtn.setStyleSheet(QUEST_LBL_CSS)
-            raddbtn.setText(', '.join(opt))
+            raddbtn.setText(', '.join(opt) if isinstance(opt, list) else opt)
             raddbtn.data = opt
 
             raddbtn.toggled.connect(lambda x: self.rbtn_toggled_handler(raddbtn.sender(), x))

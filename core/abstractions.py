@@ -39,26 +39,6 @@ class AbstractQuestionGenerator(ABC):
         pass
 
 
-class AbstactExerciseFactory(ABC):
-
-    QUEST_GENERATOR_CL = AbstractQuestionGenerator
-
-    def create_exercises(self, scenario, quest_type, ex_with_opt):
-        self.quest_gen = self.QUEST_GENERATOR_CL(scenario)
-        quests = self.quest_gen.get_questions(quest_type)
-
-        return self._create_exercise_opt(quests) if ex_with_opt \
-            else self._create_exercise(quests)
-
-    @abstractmethod
-    def _create_exercise(self, data):
-        pass
-
-    @abstractmethod
-    def _create_exercise_opt(self, data):
-        pass
-
-
 class AbstractScenarioSerializer(ABC):
 
     @abstractmethod
