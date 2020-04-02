@@ -1,6 +1,6 @@
 from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QVBoxLayout, QLineEdit, \
-    QLabel, QGroupBox, QRadioButton
+    QLabel, QGroupBox, QRadioButton, QSizePolicy
 
 
 QUEST_LBL_CSS = '''
@@ -28,12 +28,18 @@ class BaseExerciseWidget(QWidget):
         self._init_answer_field()
 
     def _init_quest_field(self):
+        self.questTypeLbl = QLabel(self)
+        self.questTypeLbl.setText(self.data.question_type)
+        self.questTypeLbl.setAlignment(Qt.AlignCenter)
+        self.questTypeLbl.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        self.grid.addWidget(self.questTypeLbl, 0, 0, 1, 1)
+
         self.questLbl = QLabel(self)
         style = QUEST_LBL_CSS if len(self.data.question) > 1 else QUEST_KAN_LBL_CSS
         self.questLbl.setStyleSheet(style)
         self.questLbl.setAlignment(Qt.AlignCenter)
         self.questLbl.setText(self.data.question)
-        self.grid.addWidget(self.questLbl, 0, 0, 1, 1)
+        self.grid.addWidget(self.questLbl, 1, 0, 1, 1)
 
     def _init_answer_field(self):
         pass
@@ -43,7 +49,7 @@ class ExerciseWidget(BaseExerciseWidget):
 
     def _init_answer_field(self):
         self.answerLnEd = QLineEdit(self)
-        self.grid.addWidget(self.answerLnEd, 1, 0, 1, 1)
+        self.grid.addWidget(self.answerLnEd, 2, 0, 1, 1)
 
     @property
     def answer(self):
@@ -68,7 +74,7 @@ class ExerciseOptWidget(BaseExerciseWidget):
 
             raddbtn.toggled.connect(lambda x: self.rbtn_toggled_handler(raddbtn.sender(), x))
             v_box.addWidget(raddbtn)
-        self.grid.addWidget(self.answersGroup, 1, 0, 1, 1)
+        self.grid.addWidget(self.answersGroup, 2, 0, 1, 1)
 
     @property
     def answer(self):

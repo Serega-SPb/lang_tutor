@@ -4,4 +4,4 @@ modules:
 modules_dir: modules
 scenarios_dir: scenarios
 ui:
-  options_enabled: false
+  options_enabled: true

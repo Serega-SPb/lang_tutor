@@ -35,7 +35,9 @@ class KanjiQuestionGenerator(AbstractQuestionGenerator):
         for kan in self.kanji_list:
             if kan.key == kan:
                 continue
-            q, a = kan.value, kan.key.value
+            q, a = kan.value, f'{kan.key.value}'
+            if kan.key.has_reduction:
+                a += f' ({", ".join(kan.key.reductions)})'
             quests.append((q, a))
         return quests
 

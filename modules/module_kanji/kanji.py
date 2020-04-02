@@ -20,14 +20,14 @@ class Kanji:
         return True
 
 
-class KanjiKey(Kanji):
-    __slots__ = ['number', 'has_reduction', 'reductions']
+class KanjiKey:
+    __slots__ = ['number', 'value', 'name', 'has_reduction', 'reductions']
 
-    INIT_ATTRS = ['number', 'value', 'dash_count']
+    INIT_ATTRS = ['number', 'value', 'name']
 
-    def __init__(self, number, value, dash_count):
-        super().__init__(self, value, dash_count)
-        self.__slots__.extend(super().__slots__)
+    def __init__(self, number, value, name):
         self.number = int(number)
+        self.value = value
+        self.name = name
         self.has_reduction = False
         self.reductions = []
