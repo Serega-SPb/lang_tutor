@@ -13,6 +13,7 @@ class NotifyEvents:
 class EditorController:
 
     WIDGETS = {}
+    MODS = {}
 
     def __init__(self, model):
         self.model = model
@@ -98,6 +99,30 @@ class EditorController:
         CrossWidgetEvents.reload_scenarios_event.emit()
         CrossWidgetEvents.change_screen_event.emit(ScI.MAIN)
 
+    def set_sc_block_index(self, value):
+        self.model.current_sc_block_index = value
+        self.apply_sc_block()
+
+    def apply_sc_block(self):
+        curr_sc_block = self.model.get_current_sc_block()
+        if curr_sc_block:
+            mod_name = curr_sc_block.module_name
+            mod_init = self.MODS[mod_name] if mod_name in self.MODS \
+                else self.data_loader.get_init(mod_name)
+            q_types = mod_init.get_question_types()
+            li_wid = mod_init.get_editor_listitem_widget_cls()
+            bl_wid = mod_init.get_editor_block_widget()
+        else:
+            q_types, li_wid, bl_wid = None, None, None
+
+        self.model.quest_types = q_types
+        self.model.listitem_widget = li_wid
+        self.model.block_widget = bl_wid
+        self.model.send_sc_block()
+
+    def set_data_index(self, value):
+        self.model.current_data_index = value
+
     # endregion
 
     # region actions with record history
@@ -108,6 +133,15 @@ class EditorController:
 
     def remove_block(self, block):
         self.model.remove_scenario_data(block)
+
+    def add_block_data(self):
+        mod_name = self.model.get_current_sc_block().module_name
+        mod_init = self.MODS[mod_name] if mod_name in self.MODS \
+            else self.data_loader.get_init(mod_name)
+        self.model.append_block_data(mod_init.create_new_data_object())
+
+    def remove_block_data(self, value):
+        self.model.remove_block_data(value)
 
     @ChangeMemento('name', NotifyEvents.scenario_name_changed)
     def change_scenarion_name(self, value):

@@ -28,7 +28,15 @@ class AbstractModuleInit(ABC):
         pass
 
     @abstractmethod
+    def get_editor_listitem_widget_cls(self):
+        pass
+
+    @abstractmethod
     def get_editor_block_widget(self):
+        pass
+
+    @abstractmethod
+    def create_new_data_object(self):
         pass
 
 

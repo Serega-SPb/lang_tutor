@@ -1,6 +1,6 @@
-from .editor_block_model import EditorBlockModel as Model
-from .editor_block_view import EditorBlockView as View
-from .editor_block_controller import EditorBlockController as Controller
+from .word_block_model import EditorBlockModel as Model
+from .word_block_view import EditorBlockView as View
+from .word_block_controller import EditorBlockController as Controller
 
 
 def init():

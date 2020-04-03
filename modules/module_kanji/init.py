@@ -1,5 +1,7 @@
 from core.abstractions import AbstractModuleInit
 from core.exercise_factory import ExerciseFactory
+from .editor.additional_widgets_kan import KanjiWidget
+from .kanji import Kanji
 
 from .qustion_generator import QuestionTypes, KanjiQuestionGenerator
 from .serializer import KanjiScenarioSerilizer
@@ -30,5 +32,11 @@ class Init(AbstractModuleInit):
     def get_exercise_opt_widget(self):
         pass
 
+    def get_editor_listitem_widget_cls(self):
+        return KanjiWidget
+
     def get_editor_block_widget(self):
         return editor_block()
+
+    def create_new_data_object(self):
+        return Kanji(self.__storage.get_key_by_id(1), '?', 1)

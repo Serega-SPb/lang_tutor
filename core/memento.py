@@ -83,7 +83,7 @@ class ChangeMemento(Memento):
 
     def save(self, subject):
         value = get_attr(subject, self.prop_path)
-        if not self.old_value:
+        if self.old_value is None:
             self.old_value = value
         else:
             self.new_value = value
