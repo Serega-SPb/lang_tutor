@@ -1,5 +1,3 @@
-from core.memento import MementoManager
-
 
 SEPARATORS = [',', '\n', ';']
 
@@ -14,7 +12,6 @@ def split(txt, seps):
 class EditorBlockController:
     def __init__(self, model):
         self.model = model
-        self.memnto_manager = MementoManager()
 
     def load_block_data(self, data, prop_path):
         self.model.prop_path = prop_path
