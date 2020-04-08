@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\Repositories\lang_tutor\modules\module_words\editor\editor_block_view.ui'
+# Form implementation generated from reading ui file 'D:\Repositories\lang_tutor\modules\module_words\editor\word_block_view.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -13,39 +13,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(800, 600)
-        self.gridLayout_3 = QtWidgets.QGridLayout(Form)
-        self.gridLayout_3.setObjectName("gridLayout_3")
-        self.questTypeLayout = QtWidgets.QHBoxLayout()
-        self.questTypeLayout.setSpacing(12)
-        self.questTypeLayout.setObjectName("questTypeLayout")
-        self.label_2 = QtWidgets.QLabel(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
-        self.label_2.setSizePolicy(sizePolicy)
-        self.label_2.setObjectName("label_2")
-        self.questTypeLayout.addWidget(self.label_2)
-        self.questTypeCmbBx = QtWidgets.QComboBox(Form)
-        self.questTypeCmbBx.setObjectName("questTypeCmbBx")
-        self.questTypeLayout.addWidget(self.questTypeCmbBx)
-        self.gridLayout_3.addLayout(self.questTypeLayout, 0, 0, 1, 1)
-        self.blockDataLayout = QtWidgets.QVBoxLayout()
-        self.blockDataLayout.setObjectName("blockDataLayout")
-        self.wordsList = QtWidgets.QListWidget(Form)
-        self.wordsList.setObjectName("wordsList")
-        self.blockDataLayout.addWidget(self.wordsList)
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.addBtn = QtWidgets.QPushButton(Form)
-        self.addBtn.setObjectName("addBtn")
-        self.horizontalLayout_2.addWidget(self.addBtn)
-        self.removeBtn = QtWidgets.QPushButton(Form)
-        self.removeBtn.setObjectName("removeBtn")
-        self.horizontalLayout_2.addWidget(self.removeBtn)
-        self.blockDataLayout.addLayout(self.horizontalLayout_2)
-        self.gridLayout_3.addLayout(self.blockDataLayout, 1, 0, 1, 1)
+        Form.resize(400, 661)
+        self.gridLayout_2 = QtWidgets.QGridLayout(Form)
+        self.gridLayout_2.setObjectName("gridLayout_2")
         self.wordContainer = QtWidgets.QWidget(Form)
         self.wordContainer.setEnabled(True)
         self.wordContainer.setObjectName("wordContainer")
@@ -120,25 +90,14 @@ class Ui_Form(object):
         self.verticalLayout_2.addLayout(self.gridLayout)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
-        self.gridLayout_3.addWidget(self.wordContainer, 0, 1, 2, 1)
-        self.gridLayout_3.setColumnStretch(0, 1)
-        self.gridLayout_3.setColumnStretch(1, 2)
+        self.gridLayout_2.addWidget(self.wordContainer, 0, 0, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
-        Form.setTabOrder(self.questTypeCmbBx, self.wordsList)
-        Form.setTabOrder(self.wordsList, self.addBtn)
-        Form.setTabOrder(self.addBtn, self.removeBtn)
-        Form.setTabOrder(self.removeBtn, self.spellingLnEd)
-        Form.setTabOrder(self.spellingLnEd, self.readingLnEd)
-        Form.setTabOrder(self.readingLnEd, self.translatePte)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.label_2.setText(_translate("Form", "Quest type"))
-        self.addBtn.setText(_translate("Form", "Add"))
-        self.removeBtn.setText(_translate("Form", "Remove"))
         self.label.setText(_translate("Form", "Word"))
         self.label_4.setText(_translate("Form", "Spelling"))
         self.label_6.setText(_translate("Form", "Translate"))

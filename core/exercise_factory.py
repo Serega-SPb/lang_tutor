@@ -14,26 +14,39 @@ class ExerciseFactory:
         self.quest_gen = self.quest_generator_cl(scenario)
         quests = self.quest_gen.get_questions(quest_type)
 
-        return self._create_exercise_opt(quests) if ex_with_opt \
-            else self._create_exercise(quests)
+        return self._create_exercise_opt(quests, quest_type) if ex_with_opt \
+            else self._create_exercise(quests, quest_type)
 
-    def _create_exercise(self, data):
+    @staticmethod
+    def _create_exercise(data, quest_type):
         result = []
-        for q, a in data:
-            ex = Exercise(q, a if isinstance(a, list) else [a])
+        for quest, answ in data:
+            ex = Exercise(quest, answ if isinstance(answ, list) else [answ], quest_type)
             result.append(ex)
+            ex_rev = Exercise(','.join(answ) if isinstance(answ, list) else answ, [quest], quest_type)
+            result.append(ex_rev)
         return result
 
-    def _create_exercise_opt(self, data):
-        result = []
-        for q, a in data:
-            other_answers = [n for m, n in data if a != n]
-            if len(other_answers) < 3:
-                self.logger.warning('Incorrect scenario or question type')
-                continue
-            opt_answers = random.sample(other_answers, k=3)
+    @staticmethod
+    def _create_exercise_opt(data, quest_type):
+        def gen_opt_answers(o_answs, a):
+            sample_k = len(o_answs) if len(o_answs) < 3 else 3
+            opt_answers = random.sample(o_answs, k=sample_k)
             opt_answers.append(a)
             random.shuffle(opt_answers)
-            ex = ExerciseWithOptions(q, a if isinstance(a, list) else [a], opt_answers)
+            return opt_answers
+
+        result = []
+        for quest, answ in data:
+            other_answers = [a for _, a in data if answ != a]
+            opts = gen_opt_answers(other_answers, answ)
+            ex_answ = answ if isinstance(answ, list) else [answ]
+            ex = ExerciseWithOptions(quest, ex_answ, opts, quest_type)
             result.append(ex)
+
+            rev_other_answers = [q for q, _ in data if quest != q]
+            rev_opts = gen_opt_answers(rev_other_answers, quest)
+            rev_ex_answ = ','.join(answ) if isinstance(answ, list) else answ
+            rev_ex = ExerciseWithOptions(rev_ex_answ, [quest], rev_opts, quest_type)
+            result.append(rev_ex)
         return result

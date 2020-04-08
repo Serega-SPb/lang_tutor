@@ -1,0 +1,115 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'D:\Repositories\lang_tutor\modules\module_numbers\editor\number_block_view.ui'
+#
+# Created by: PyQt5 UI code generator 5.13.0
+#
+# WARNING! All changes made in this file will be lost!
+
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+
+class Ui_Form(object):
+    def setupUi(self, Form):
+        Form.setObjectName("Form")
+        Form.resize(400, 662)
+        self.gridLayout = QtWidgets.QGridLayout(Form)
+        self.gridLayout.setObjectName("gridLayout")
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label = QtWidgets.QLabel(Form)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.label.setFont(font)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.verticalLayout.addWidget(self.label)
+        self.isRangeChbx = QtWidgets.QCheckBox(Form)
+        self.isRangeChbx.setObjectName("isRangeChbx")
+        self.verticalLayout.addWidget(self.isRangeChbx)
+        self.singleValueWidget = QtWidgets.QWidget(Form)
+        self.singleValueWidget.setObjectName("singleValueWidget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.singleValueWidget)
+        self.horizontalLayout.setSpacing(15)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.label_2 = QtWidgets.QLabel(self.singleValueWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy)
+        self.label_2.setObjectName("label_2")
+        self.horizontalLayout.addWidget(self.label_2)
+        self.singleValueSpBx = QtWidgets.QSpinBox(self.singleValueWidget)
+        self.singleValueSpBx.setMaximum(100000000)
+        self.singleValueSpBx.setObjectName("singleValueSpBx")
+        self.horizontalLayout.addWidget(self.singleValueSpBx)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
+        self.verticalLayout.addWidget(self.singleValueWidget)
+        self.rangeValueWidget = QtWidgets.QWidget(Form)
+        self.rangeValueWidget.setObjectName("rangeValueWidget")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.rangeValueWidget)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.label_5 = QtWidgets.QLabel(self.rangeValueWidget)
+        self.label_5.setObjectName("label_5")
+        self.horizontalLayout_2.addWidget(self.label_5)
+        self.rangeFromSpBx = QtWidgets.QSpinBox(self.rangeValueWidget)
+        self.rangeFromSpBx.setMaximum(100000000)
+        self.rangeFromSpBx.setObjectName("rangeFromSpBx")
+        self.horizontalLayout_2.addWidget(self.rangeFromSpBx)
+        self.label_4 = QtWidgets.QLabel(self.rangeValueWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy)
+        self.label_4.setObjectName("label_4")
+        self.horizontalLayout_2.addWidget(self.label_4)
+        self.rangeToSpBx = QtWidgets.QSpinBox(self.rangeValueWidget)
+        self.rangeToSpBx.setMaximum(100000000)
+        self.rangeToSpBx.setObjectName("rangeToSpBx")
+        self.horizontalLayout_2.addWidget(self.rangeToSpBx)
+        self.label_3 = QtWidgets.QLabel(self.rangeValueWidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy)
+        self.label_3.setObjectName("label_3")
+        self.horizontalLayout_2.addWidget(self.label_3)
+        self.stepSpBx = QtWidgets.QSpinBox(self.rangeValueWidget)
+        self.stepSpBx.setMinimum(1)
+        self.stepSpBx.setMaximum(10000000)
+        self.stepSpBx.setObjectName("stepSpBx")
+        self.horizontalLayout_2.addWidget(self.stepSpBx)
+        self.verticalLayout.addWidget(self.rangeValueWidget)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem1)
+        self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
+
+        self.retranslateUi(Form)
+        self.isRangeChbx.toggled['bool'].connect(self.singleValueWidget.setHidden)
+        self.isRangeChbx.toggled['bool'].connect(self.rangeValueWidget.setVisible)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
+        self.label.setText(_translate("Form", "Number"))
+        self.isRangeChbx.setText(_translate("Form", "is range"))
+        self.label_2.setText(_translate("Form", "value"))
+        self.label_5.setText(_translate("Form", "range"))
+        self.label_4.setText(_translate("Form", "-"))
+        self.label_3.setText(_translate("Form", "step"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Form = QtWidgets.QWidget()
+    ui = Ui_Form()
+    ui.setupUi(Form)
+    Form.show()
+    sys.exit(app.exec_())

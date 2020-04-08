@@ -30,5 +30,5 @@ class KanjiScenarioSerilizer(AbstractScenarioSerializer):
             kanji = Kanji(key, value, dash_count)
             [setattr(kanji, attr, d[attr])
              for attr in Kanji.__slots__ if attr not in Kanji.INIT_ATTRS]
-            result.append(key if key == kanji else kanji)
+            result.append(kanji)
         return result

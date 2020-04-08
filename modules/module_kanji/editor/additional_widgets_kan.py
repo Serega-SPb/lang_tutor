@@ -40,7 +40,10 @@ class KeyComboBox(QComboBox):
         self.clear()
         model = self.model()
         for i, d in enumerate(data):
-            item = QStandardItem(f'{d.number}. {d.value}')
+            txt = f'{d.number}. {d.value}'
+            if d.has_reduction:
+                txt += f' ({", ".join(d.reductions)})'
+            item = QStandardItem(txt)
             item.data = d
             model.appendRow(item)
             self.items[i] = item
@@ -53,4 +56,3 @@ class KeyComboBox(QComboBox):
     def get_currect_data(self):
         ind = self.currentIndex()
         return self.items[ind].data if ind in self.items.keys() else None
-

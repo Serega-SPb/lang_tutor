@@ -1,8 +1,10 @@
 from core.abstractions import AbstractModuleInit
 from core.exercise_factory import ExerciseFactory
+from .editor.additional_widgets_word import WordWidget
 from .question_generator import QuestionTypes, WordsQuestionGenerator
 from .serializer import WordsScenarioSerilizer
 from .editor import init as editor_block
+from .word import Word
 
 
 class Init(AbstractModuleInit):
@@ -27,5 +29,11 @@ class Init(AbstractModuleInit):
     def get_exercise_opt_widget(self):
         pass
 
+    def get_editor_listitem_widget_cls(self):
+        return WordWidget
+
     def get_editor_block_widget(self):
         return editor_block()
+
+    def create_new_data_object(self):
+        return Word('?', '?', [])

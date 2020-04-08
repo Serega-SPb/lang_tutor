@@ -1,18 +1,15 @@
 from core.abstractions import AbstractModuleInit
 from core.exercise_factory import ExerciseFactory
-from .editor.additional_widgets_kan import KanjiWidget
-from .kanji import Kanji
-
-from .qustion_generator import QuestionTypes, KanjiQuestionGenerator
-from .serializer import KanjiScenarioSerilizer
-from .storage import KanjiStorage
+from .editor.additional_widgets_number import NumberWidget
+from .question_generator import QuestionTypes, NumbersQuestionGenerator
+from .serializer import NumbersScenarioSerilizer
 from .editor import init as editor_block
+from .number_data import NumberData
 
 
 class Init(AbstractModuleInit):
-    __storage = KanjiStorage()
-    __exercise_factory = ExerciseFactory(KanjiQuestionGenerator)
-    __scenario_serializer = KanjiScenarioSerilizer()
+    __exercise_factory = ExerciseFactory(NumbersQuestionGenerator)
+    __scenario_serializer = NumbersScenarioSerilizer()
 
     def get_question_types(self):
         return QuestionTypes.get_types()
@@ -33,10 +30,11 @@ class Init(AbstractModuleInit):
         pass
 
     def get_editor_listitem_widget_cls(self):
-        return KanjiWidget
+        return NumberWidget
 
     def get_editor_block_widget(self):
         return editor_block()
 
     def create_new_data_object(self):
-        return Kanji(self.__storage.get_key_by_id(1), '?', 1)
+        return NumberData(False, 0, 1)
+
