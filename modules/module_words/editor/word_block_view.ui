@@ -163,6 +163,11 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>spellingLnEd</tabstop>
+  <tabstop>readingLnEd</tabstop>
+  <tabstop>translatePte</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

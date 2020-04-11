@@ -36,5 +36,5 @@ class Init(AbstractModuleInit):
         return editor_block()
 
     def create_new_data_object(self):
-        return NumberData(False, 0, 1)
+        return NumberData(False, 0, [0, 0], 1)
 
