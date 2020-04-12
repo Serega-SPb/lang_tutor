@@ -17,6 +17,7 @@ class NumbersQuestionGenerator(AbstractQuestionGenerator):
     quest_types = {}
 
     def __init__(self, scenario_number_data):
+        self.numbers.clear()
         [self.numbers.extend(data.get_numbers()) for data in scenario_number_data]
         self.quest_types = {
             QuestionTypes.TRANSLATE_QUESTS: self.get_translate_questions,
