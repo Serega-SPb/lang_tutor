@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QWidget, QGridLayout, QVBoxLayout, QLineEdit, \
 
 
 QUEST_LBL_CSS = '''
-font-size: 18px
+font-size: 20px
 '''
 
 QUEST_KAN_LBL_CSS = '''
@@ -68,7 +68,7 @@ class ExerciseOptWidget(BaseExerciseWidget):
         self.answersGroup.setLayout(v_box)
         for i, opt in enumerate(self.data.options_answers):
             raddbtn = QRadioButton()
-            raddbtn.setStyleSheet(QUEST_LBL_CSS)
+            # raddbtn.setStyleSheet(QUEST_LBL_CSS)
             raddbtn.setText(', '.join(opt) if isinstance(opt, list) else opt)
             raddbtn.data = opt
 

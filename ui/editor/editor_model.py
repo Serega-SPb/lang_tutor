@@ -1,5 +1,5 @@
 from core.descriptors import NotifyProperty
-from core.memento import AddMemento, RemoveMemento
+from core.memento import AddMemento, RemoveMemento, ChangeMemento
 from ui.ui_messaga_bus import Event
 
 
@@ -14,6 +14,7 @@ class EditorModel:
     blocks_changed = Event(list)
 
     quest_types_changed = Event(list)
+    current_quest_type_changed = Event(str)
     current_sc_block_index_changed = Event(int)
     current_data_index_changed = Event(int)
     current_sc_block_changed = Event(object)
@@ -24,6 +25,7 @@ class EditorModel:
 
     update_scenario_event = Event()
     update_curr_sc_block = Event()
+    update_current_quest_type_event = Event()
 
     def __init__(self):
         self._scenario = NotifyProperty('scenario')
@@ -49,6 +51,7 @@ class EditorModel:
         self._block_widget += self.block_widget_changed.emit
         self.update_scenario_event += self.update_scenario
         self.update_curr_sc_block += self.send_sc_block
+        self.update_current_quest_type_event += lambda: self.current_quest_type_changed.emit(self.current_quest_type)
 
     # region Top lvl
     @property
@@ -106,6 +109,23 @@ class EditorModel:
     @quest_types.setter
     def quest_types(self, value):
         self._quest_types.set(value)
+
+    @property
+    def current_quest_type(self):
+        return self.get_current_sc_block().quest_type
+
+    @current_quest_type.setter
+    def current_quest_type(self, value):
+        @ChangeMemento(self.get_block_prop_path('quest_type'), self.update_current_quest_type_event)
+        def wrapper():
+            self.get_current_sc_block().quest_type = value
+            self.current_quest_type_changed.emit(value)
+
+        curr_bl = self.get_current_sc_block()
+
+        if curr_bl is None or curr_bl.quest_type == value:
+            return
+        wrapper()
 
     @property
     def current_sc_block_index(self):

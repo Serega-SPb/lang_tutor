@@ -10,6 +10,7 @@ class EditorView(QWidget):
 
     current_listitem_widget = None
     current_block_widget = None
+    quest_types_loaded = False
 
     def __init__(self, model, controller, parent=None):
         super().__init__(parent)
@@ -44,6 +45,7 @@ class EditorView(QWidget):
         self.ui.scenarioBlocksList.currentRowChanged.connect(self.controller.set_sc_block_index)
         self.ui.blockDataList.currentRowChanged.connect(self.controller.set_data_index)
         self.ui.scenarioNameLed.textEdited.connect(self.controller.change_scenarion_name)
+        self.ui.questTypeCmbBx.currentTextChanged.connect(self.set_quest_type)
 
         self.ui.addBtn.clicked.connect(self.controller.add_block_data)
         self.ui.removeBtn.clicked.connect(self.remove_block_data)
@@ -57,6 +59,7 @@ class EditorView(QWidget):
         self.model.can_redo_changed += self.ui.redoBtn.setEnabled
 
         self.model.quest_types_changed += self.load_quest_types
+        self.model.current_quest_type_changed += self.ui.questTypeCmbBx.setCurrentText
         self.model.current_sc_block_index_changed += self.ui.scenarioBlocksList.setCurrentRow
         self.model.current_data_index_changed += self.ui.blockDataList.setCurrentRow
         self.model.current_sc_block_changed += self.load_sc_block
@@ -72,9 +75,15 @@ class EditorView(QWidget):
             load_data_in_list(self.ui.scenarioBlocksList, ScenarioDataWidget, data, self.remove_block)
 
     def load_quest_types(self, types):
+        self.quest_types_loaded = False
         self.ui.questTypeCmbBx.clear()
         if types:
             self.ui.questTypeCmbBx.addItems(types)
+        self.quest_types_loaded = True
+
+    def set_quest_type(self, value):
+        if self.quest_types_loaded:
+            self.controller.set_quest_type(value)
 
     def load_sc_block(self, sc_block):
         self.ui.blockDataList.clear()

@@ -143,6 +143,10 @@ class EditorController:
     def remove_block_data(self, value):
         self.model.remove_block_data(value)
 
+    def set_quest_type(self, value):
+        if value:
+            self.model.current_quest_type = value
+
     @ChangeMemento('name', NotifyEvents.scenario_name_changed)
     def change_scenarion_name(self, value):
         self.model.scenario.name = value

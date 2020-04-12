@@ -9,7 +9,7 @@ from ui.cross_widget_events import CrossWidgetEvents, MessageType as MsgType
 
 
 class AppManager(metaclass=Singleton):
-
+    APP_NAME = 'Lang tutor'
     WIDGETS = [
         main_widget,
         scenario_widget,
@@ -29,6 +29,7 @@ class AppManager(metaclass=Singleton):
     def __init_main_window(self):
         self.main_window = QMainWindow()
         self.main_window.resize(1024, 768)
+        self.main_window.setWindowTitle(self.APP_NAME)
 
         font = QFont()
         font.setFamily("Calibri")
