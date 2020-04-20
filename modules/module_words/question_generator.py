@@ -1,14 +1,18 @@
 from core.abstractions import AbstractQuestionGenerator
+from core.scenario import QuestType
 
 
 class QuestionTypes:
     TRANSLATE_QUESTS = 'translate_quests'
     READING_QUESTS = 'reading_quests'
 
+    translate_func = lambda x: x
+
     @staticmethod
     def get_types():
         qt = QuestionTypes
-        return qt.TRANSLATE_QUESTS, qt.READING_QUESTS
+        return QuestType(qt.TRANSLATE_QUESTS, qt.translate_func), \
+               QuestType(qt.READING_QUESTS, qt.translate_func)
 
 
 class WordsQuestionGenerator(AbstractQuestionGenerator):

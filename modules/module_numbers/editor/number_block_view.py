@@ -40,4 +40,3 @@ class EditorBlockView(QWidget):
         self.ui.rangeFromSpBx.setValue(number.value_range[0])
         self.ui.rangeToSpBx.setValue(number.value_range[-1])
         self.ui.singleValueSpBx.setValue(number.value)
-

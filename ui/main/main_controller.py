@@ -5,6 +5,7 @@ from core.log_config import LOGGER_NAME
 from ui.cross_widget_events import ScreenIndex as ScI
 from ui.cross_widget_events import CrossWidgetEvents as CrossEvent, \
                                     MessageType as MsgType
+from ui.translator import Translator
 
 
 class MainController:
@@ -12,8 +13,10 @@ class MainController:
         super().__init__()
         self.model = model
         self.data_loader = DataLoader()
+        self.tranlator = Translator.get_translator('main')
         self.logger = logging.getLogger(LOGGER_NAME)
         CrossEvent.reload_scenarios_event += self.reload_scenarios
+        CrossEvent.locale_changed_event += self.reloads
 
     def reload_modules(self):
         self.data_loader.load_modules()
@@ -25,12 +28,12 @@ class MainController:
 
     def start_scenario(self, scenario, opt_enb):
         self.logger.debug(f'Start {scenario.name}')
-        check_mod = all([self.data_loader.get_init(r_mod) is not None
-                         for r_mod in scenario.required_modules])
+        check_mod = all(r_mod.is_enabled for r_mod in scenario.required_modules)
         if not check_mod:
-            msg = 'Not all required modules are enabled'
+            title = self.tranlator.translate('WARNING_TEXT')
+            msg = self.tranlator.translate('REQ_MODS_NOT_ENB_TEXT')
             self.logger.debug(msg)
-            CrossEvent.show_message_event.emit(MsgType.WARN, 'Warning', msg)
+            CrossEvent.show_message_event.emit(MsgType.WARN, title, msg)
             return
 
         CrossEvent.load_scenario_event.emit(scenario, opt_enb)
@@ -39,7 +42,11 @@ class MainController:
     def set_editor_mode(self, value):
         self.model.editor_mode = value
 
-    def start_editor(self, mode, *args):
+    @staticmethod
+    def start_editor(mode, *args):
         CrossEvent.start_editor_event.emit(mode, *args)
         CrossEvent.change_screen_event.emit(ScI.EDITOR)
-        pass
+
+    def reloads(self):
+        self.reload_modules()
+        self.reload_scenarios()

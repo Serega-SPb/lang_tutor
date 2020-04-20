@@ -13,6 +13,7 @@ from .metaclasses import Singleton
 
 
 class Constants:
+    LOCALE = 'locale'
     MODULES = 'modules'
     MODULE = 'module'
     DATA = 'data'
@@ -89,16 +90,12 @@ class DataLoader(metaclass=Singleton):
 
         mods = mod_cfg.get_children()
         for m_dir in os.listdir(self.modules_dir):
-            mod = Module(m_dir)
-            mod.enable_changed += lambda b: self.on_mod_status_changed(mod_cfg, m_dir, b)
+            status = mod_cfg.get_param(m_dir)
+            mod = Module(m_dir, is_enabled=status)
+            mod.enable_changed += lambda n, b: self.on_mod_status_changed(mod_cfg, n, b)
             self.modules[m_dir] = mod
-            mod.is_enabled = mod_cfg.get_param(m_dir) or True
-
-    def get_init(self, mod_name):
-        return self.modules.get(mod_name).init
 
     def on_mod_status_changed(self, mod_cfg, mod_name, value):
-        self.logger.debug(f'Status {mod_name} changed to {value}')
         mod_cfg.set_param(mod_name, value)
         self.save_config()
 
@@ -120,13 +117,13 @@ class DataLoader(metaclass=Singleton):
 
         def create_sc_data(block):
             mod_name = block[Constants.MODULE]
-            mod_init = self.get_init(mod_name)
-            if mod_init is None:
+            mod = self.modules.get(mod_name)
+            if mod is None:
                 self.logger.warning(f'Module {mod_name} not found')
                 return None
-            req_mods.add(mod_name)
-            lazy_init = lambda: mod_init.deserialize_block(block[Constants.DATA])
-            return ScenarioData(mod_name, block[Constants.QUESTION_TYPE], lazy_init)
+            req_mods.add(mod)
+            lazy_init = lambda: mod.init.deserialize_block(block[Constants.DATA])
+            return ScenarioData(mod, block[Constants.QUESTION_TYPE], lazy_init)
 
         with open(file, 'r', encoding='utf-8') as reader:
             content = json.load(reader)
@@ -146,11 +143,10 @@ class DataLoader(metaclass=Singleton):
         file = os.path.join(self.scenarios_dir, f'{scenario.name}.json')
         result = []
         for sc_data in scenario.scenario_data:
-            mod_init = self.get_init(sc_data.module_name)
             block = {
-                Constants.MODULE: sc_data.module_name,
+                Constants.MODULE: sc_data.module.name,
                 Constants.QUESTION_TYPE: sc_data.quest_type,
-                Constants.DATA: mod_init.serialize_block(sc_data.data)
+                Constants.DATA: sc_data.module.init.serialize_block(sc_data.data)
             }
             result.append(block)
 

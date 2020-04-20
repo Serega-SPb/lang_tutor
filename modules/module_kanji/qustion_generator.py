@@ -1,16 +1,20 @@
 from core.abstractions import AbstractQuestionGenerator
+from core.scenario import QuestType
 
 
 class QuestionTypes:
     KEY_QUESTS = 'key_quests'
     TRANSLATE_QUESTS = 'translate_quests'
     READING_QUESTS = 'reading_quests'
-    # TODO ? add types RU->JP | JP->RU
+
+    translate_func = lambda x: x
 
     @staticmethod
     def get_types():
         qt = QuestionTypes
-        return qt.KEY_QUESTS, qt.TRANSLATE_QUESTS, qt.READING_QUESTS
+        return QuestType(qt.KEY_QUESTS, qt.translate_func), \
+               QuestType(qt.TRANSLATE_QUESTS, qt.translate_func), \
+               QuestType(qt.READING_QUESTS, qt.translate_func)
 
 
 class KanjiQuestionGenerator(AbstractQuestionGenerator):

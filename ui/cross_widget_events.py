@@ -24,3 +24,4 @@ class CrossWidgetEvents:
     show_message_event = Event(str, str, str)
     start_editor_event = Event(EditorMode, list)
     reload_scenarios_event = Event()
+    locale_changed_event = Event()

@@ -1,6 +1,8 @@
 from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QCheckBox, QLabel, QPushButton, QListWidgetItem
 
+from .translator import Translator
+
 
 def load_data_in_list(list_wid, data_wid, data, *args):
     item = QListWidgetItem()
@@ -11,6 +13,13 @@ def load_data_in_list(list_wid, data_wid, data, *args):
     item.setSizeHint(widget.sizeHint())
     list_wid.addItem(item)
     list_wid.setItemWidget(item, widget)
+
+
+def translate_widget(wid):
+    if hasattr(wid, 'text'):
+        if not hasattr(wid, 'text_var'):
+            wid.text_var = wid.text()
+        wid.setText(Translator.get_translator('main').translate(wid.text_var))
 
 
 class ModuleWidget(QWidget):
@@ -24,7 +33,7 @@ class ModuleWidget(QWidget):
         grid = QGridLayout(self)
         self.setLayout(grid)
         self.modChbx = QCheckBox(self)
-        self.modChbx.setText(self.module.name)
+        self.update_lbl()
         self.modChbx.setChecked(self.module.is_enabled)
         self.modChbx.toggled['bool'].connect(self.update_status)
 
@@ -32,6 +41,10 @@ class ModuleWidget(QWidget):
 
     def update_status(self, status):
         self.module.is_enabled = status
+        self.update_lbl()
+
+    def update_lbl(self):
+        self.modChbx.setText(self.module.ui_name)
 
 
 class ScenarioWidget(QWidget):
@@ -49,7 +62,8 @@ class ScenarioWidget(QWidget):
         grid.addWidget(self.titleLbl)
 
         self.reqModsLbl = QLabel()
-        self.reqModsLbl.setText(','.join(self.scenario.required_modules))
+        mod_names = [mod.ui_name for mod in self.scenario.required_modules]
+        self.reqModsLbl.setText(', '.join(mod_names))
         self.reqModsLbl.setAlignment(Qt.AlignRight)
         grid.addWidget(self.reqModsLbl, 0, 2, 0, 1)
 
@@ -84,7 +98,9 @@ class ScenarioDataWidget(QWidget):
         grid.addWidget(self.removeBtn, 0, 4, 0, 1)
 
     def update_title(self, *args):
-        title_txt = f'{self.sc_data.module_name} | {self.sc_data.quest_type}'
+        mod_name = self.sc_data.module.init.get_name()
+        q_type = self.sc_data.quest_type.ui
+        title_txt = f'{mod_name} | {q_type}'
         self.titleLbl.setText(title_txt)
 
     def unsubscribe(self):

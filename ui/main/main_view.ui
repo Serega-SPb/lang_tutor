@@ -31,7 +31,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Main menu</string>
+        <string>MAIN_MENU_LBL</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -41,7 +41,7 @@
      <item>
       <widget class="QPushButton" name="scenarioMenuBtn">
        <property name="text">
-        <string>Scenarios</string>
+        <string>SCENARIOS_MENU</string>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -54,14 +54,14 @@
         <bool>true</bool>
        </property>
        <property name="text">
-        <string>Editor</string>
+        <string>EDITOR_MENU</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="modulesMenuBtn">
        <property name="text">
-        <string>Modules</string>
+        <string>MODULES_MENU</string>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -74,21 +74,21 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Config</string>
+        <string>CONFIG_MENU</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="debugMenuBtn">
        <property name="text">
-        <string>Debug</string>
+        <string>DEBUG_MENU</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="quitMenuBtn">
        <property name="text">
-        <string>Quit</string>
+        <string>QUIT_MENU</string>
        </property>
       </widget>
      </item>
@@ -125,7 +125,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Comming soon</string>
+          <string>COMMING_SOON_LBL</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -139,7 +139,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Scenarios list</string>
+          <string>SCENARIOS_LIST_LBL</string>
          </property>
         </widget>
        </item>
@@ -183,7 +183,7 @@
          <item>
           <widget class="QPushButton" name="starScenarioBtn">
            <property name="text">
-            <string>Start</string>
+            <string>START_BTN</string>
            </property>
           </widget>
          </item>
@@ -199,7 +199,7 @@
             <enum>Qt::RightToLeft</enum>
            </property>
            <property name="text">
-            <string>Answer options</string>
+            <string>ANSWER_OPTIONS</string>
            </property>
           </widget>
          </item>
@@ -212,7 +212,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Modules</string>
+          <string>MODULES_LBL</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -266,7 +266,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Logs</string>
+          <string>LOGS_LBL</string>
          </property>
         </widget>
        </item>
@@ -317,7 +317,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Create new</string>
+             <string>CREATE_NEW_MODE</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -332,7 +332,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Create from</string>
+             <string>CREATE_FROM_MODE</string>
             </property>
            </widget>
           </item>
@@ -351,7 +351,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Load</string>
+             <string>LOAD_MODE</string>
             </property>
            </widget>
           </item>
@@ -379,7 +379,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Start</string>
+             <string>START_BTN</string>
             </property>
            </widget>
           </item>

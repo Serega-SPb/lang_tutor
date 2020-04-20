@@ -6,7 +6,8 @@ from core import log_config
 from core.data_loader import DataLoader
 from core.decorators import try_except_wrapper
 from ui.additional_widgets import ModuleWidget, ScenarioWidget, load_data_in_list
-from ui.cross_widget_events import EditorMode
+from ui.cross_widget_events import EditorMode, CrossWidgetEvents as CrossEvent
+from ui.additional_widgets import translate_widget
 from .main_view_ui import Ui_Form
 
 
@@ -43,6 +44,7 @@ class MainView(QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.translate_ui()
 
         self.data_loader = DataLoader()
         self.logger = logging.getLogger(log_config.LOGGER_NAME)
@@ -54,6 +56,17 @@ class MainView(QWidget):
 
         self.load_modules()
         self.load_scenarios()
+
+        CrossEvent.locale_changed_event += self.translate_ui
+
+    def translate_ui(self):
+        ui = self.ui
+        widgets = [ui.label, ui.label_2, ui.label_3, ui.label_4, ui.label_5,
+                   ui.scenarioMenuBtn, ui.editorMenuBtn, ui.modulesMenuBtn,
+                   ui.configMenuBtn, ui.debugMenuBtn, ui.quitMenuBtn,
+                   ui.starScenarioBtn, ui.startEditorBtn, ui.optionsEnableChbx,
+                   ui.createNewRbn, ui.createFromRbn, ui.loadRbn]
+        [translate_widget(w) for w in widgets]
 
     def init_ui(self):
         self.ui.starScenarioBtn.setEnabled(False)
@@ -87,7 +100,6 @@ class MainView(QWidget):
 
         self.ui.scenarioMenuBtn.clicked.connect(lambda: self.select_screen(Menu.SCENARIO))
         self.ui.editorMenuBtn.clicked.connect(lambda: self.select_screen(Menu.EDITOR))
-        # self.ui.editorMenuBtn.clicked.connect(lambda: CrossWidgetEvents.change_screen_event.emit(ScI.EDITOR))
         self.ui.modulesMenuBtn.clicked.connect(lambda: self.select_screen(Menu.MODULES))
         self.ui.configMenuBtn.clicked.connect(lambda: self.select_screen(Menu.DEFAULT))
         self.ui.debugMenuBtn.clicked.connect(lambda: self.select_screen(Menu.DEBUG))

@@ -10,13 +10,17 @@ class Module:
     get_mod_dir = None
 
     def __init__(self, name, **kwargs):
-        self.enable_changed = Event(bool)
+        self.enable_changed = Event(str, bool)
+        self.enable_changed += self.on_enabled_changed
+        self._is_enabled = False
+        self._init = None
 
         self.name = name
-        self._is_enabled = kwargs.get('is_enabled') or False
-        self._init = kwargs.get('init') or None
+        self.is_enabled = kwargs.get('is_enabled', True)
 
-        self.enable_changed += self.on_enabled_changed
+    @property
+    def ui_name(self):
+        return self.init.get_name() if self.init else self.name
 
     @property
     def is_enabled(self):
@@ -24,8 +28,10 @@ class Module:
 
     @is_enabled.setter
     def is_enabled(self, value):
+        if self._is_enabled == value:
+            return
         self._is_enabled = value
-        self.enable_changed.emit(value)
+        self.enable_changed.emit(self.name, value)
 
     @property
     def init(self):
@@ -40,6 +46,6 @@ class Module:
         self._is_enabled = False
         self._init = None
 
-    def on_enabled_changed(self, value):
+    def on_enabled_changed(self, name, value):
         self.activate_module() if value \
             else self.deactivate_module()

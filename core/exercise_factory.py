@@ -12,7 +12,7 @@ class ExerciseFactory:
 
     def create_exercises(self, scenario, quest_type, ex_with_opt):
         self.quest_gen = self.quest_generator_cl(scenario)
-        quests = self.quest_gen.get_questions(quest_type)
+        quests = self.quest_gen.get_questions(quest_type.value)
 
         return self._create_exercise_opt(quests, quest_type) if ex_with_opt \
             else self._create_exercise(quests, quest_type)
@@ -23,7 +23,8 @@ class ExerciseFactory:
         for quest, answ in data:
             ex = Exercise(quest, answ if isinstance(answ, list) else [answ], quest_type)
             result.append(ex)
-            ex_rev = Exercise(','.join(answ) if isinstance(answ, list) else answ, [quest], quest_type)
+            ex_rev = Exercise(', '.join(answ) if isinstance(answ, list)
+                              else answ, [quest], quest_type)
             result.append(ex_rev)
         return result
 
@@ -46,7 +47,7 @@ class ExerciseFactory:
 
             rev_other_answers = [q for q, _ in data if quest != q]
             rev_opts = gen_opt_answers(rev_other_answers, quest)
-            rev_ex_answ = ','.join(answ) if isinstance(answ, list) else answ
+            rev_ex_answ = ', '.join(answ) if isinstance(answ, list) else answ
             rev_ex = ExerciseWithOptions(rev_ex_answ, [quest], rev_opts, quest_type)
             result.append(rev_ex)
         return result

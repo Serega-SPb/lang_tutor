@@ -2,6 +2,8 @@ from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QVBoxLayout, QLineEdit, \
     QLabel, QGroupBox, QRadioButton, QSizePolicy
 
+from ui.ui_messaga_bus import Event
+
 
 QUEST_LBL_CSS = '''
 font-size: 20px
@@ -14,6 +16,8 @@ font-size: 60pt
 
 
 class BaseExerciseWidget(QWidget):
+
+    send_answer_event = Event()
 
     def __init__(self, exercise, parent=None):
         super().__init__(parent)
@@ -29,7 +33,7 @@ class BaseExerciseWidget(QWidget):
 
     def _init_quest_field(self):
         self.questTypeLbl = QLabel(self)
-        self.questTypeLbl.setText(self.data.question_type)
+        self.questTypeLbl.setText(self.data.question_type.ui)
         self.questTypeLbl.setAlignment(Qt.AlignCenter)
         self.questTypeLbl.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         self.grid.addWidget(self.questTypeLbl, 0, 0, 1, 1)
@@ -47,8 +51,12 @@ class BaseExerciseWidget(QWidget):
 
 class ExerciseWidget(BaseExerciseWidget):
 
+    def setFocus(self, Qt_FocusReason=None):
+        self.answerLnEd.setFocus()
+
     def _init_answer_field(self):
         self.answerLnEd = QLineEdit(self)
+        self.answerLnEd.returnPressed.connect(self.send_answer_event.emit)
         self.grid.addWidget(self.answerLnEd, 2, 0, 1, 1)
 
     @property

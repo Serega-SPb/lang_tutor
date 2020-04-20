@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget
 
 from core.data_loader import DataLoader
 from core.decorators import try_except_wrapper
-from ui.additional_widgets import ScenarioDataWidget, load_data_in_list
+from ui.additional_widgets import ScenarioDataWidget, load_data_in_list, translate_widget
 from .editor_view_ui import Ui_Form
 
 
@@ -19,10 +19,18 @@ class EditorView(QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.translate_ui()
 
         self.init_ui()
         self.connect_widgets()
         self.connect_model_signals()
+
+    def translate_ui(self):
+        ui = self.ui
+        widgets = [ui.label, ui.label_2, ui.label_3, ui.label_10,
+                   ui.backMenuBtn, ui.saveBtn, ui.addBlockBtn,
+                   ui.addBtn, ui.removeBtn]
+        [translate_widget(w) for w in widgets]
 
     def init_ui(self):
         self.ui.saveBtn.setEnabled(False)
@@ -78,11 +86,12 @@ class EditorView(QWidget):
         self.quest_types_loaded = False
         self.ui.questTypeCmbBx.clear()
         if types:
-            self.ui.questTypeCmbBx.addItems(types)
+            [self.ui.questTypeCmbBx.addItem(t.ui, t) for t in types]
         self.quest_types_loaded = True
 
     def set_quest_type(self, value):
         if self.quest_types_loaded:
+            value = self.ui.questTypeCmbBx.currentData()
             self.controller.set_quest_type(value)
 
     def load_sc_block(self, sc_block):
@@ -90,18 +99,15 @@ class EditorView(QWidget):
         self.ui.scenarioBlockWidget.setEnabled(sc_block is not None)
         if not sc_block:
             return
-        self.ui.questTypeCmbBx.setCurrentText(sc_block.quest_type)
+        index = self.ui.questTypeCmbBx.findText(sc_block.quest_type.ui)
+        self.ui.questTypeCmbBx.setCurrentIndex(index)
 
         for d in sc_block.data:
             load_data_in_list(self.ui.blockDataList, self.current_listitem_widget, d)
 
-    @property
-    def current_add_block(self):
-        return self.ui.blocksCmbBx.currentText()
-
     def load_blocks(self, blocks):
         self.ui.blocksCmbBx.clear()
-        [self.ui.blocksCmbBx.addItem(bl) for bl in blocks]
+        [self.ui.blocksCmbBx.addItem(bl.ui_name, bl) for bl in blocks]
 
     def set_listitem_widget(self, value):
         self.current_listitem_widget = value
@@ -111,7 +117,8 @@ class EditorView(QWidget):
 
     @try_except_wrapper
     def add_block(self, *args):
-        self.controller.add_block(self.current_add_block)
+        block = self.ui.blocksCmbBx.currentData()
+        self.controller.add_block(block)
 
     @try_except_wrapper
     def remove_block(self, *args):
