@@ -1,4 +1,5 @@
-import importlib
+import os
+from importlib import util
 
 from .decorators import try_except_wrapper
 from ui.ui_messaga_bus import Event
@@ -39,7 +40,11 @@ class Module:
 
     @try_except_wrapper
     def activate_module(self):
-        self._init = importlib.import_module(f'{self.get_mod_dir()}.{self.name}.init').Init()
+        path = os.path.join(self.get_mod_dir(), self.name, 'init.py')
+        spec = util.spec_from_file_location(self.name, path)
+        mod = util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        self._init = mod.Init()
         self._is_enabled = True
 
     def deactivate_module(self):

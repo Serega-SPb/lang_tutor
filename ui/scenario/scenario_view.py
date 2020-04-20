@@ -4,6 +4,7 @@ from core.decorators import try_except_wrapper
 from .scenario_view_ui import Ui_Form
 from ui.exercise_ui_manager import ExerciseManager
 from ..additional_widgets import translate_widget
+from ..translator import Translator
 
 
 class ScenarioView(QWidget):
@@ -26,8 +27,9 @@ class ScenarioView(QWidget):
 
     def translate_ui(self):
         ui = self.ui
+        translator = Translator.get_translator('main')
         widgets = [ui.answerBtn, ui.backMenuBtn]
-        [translate_widget(w) for w in widgets]
+        [translate_widget(w, translator) for w in widgets]
 
     def init_ui(self):
         self.ui.totalLbl.setText(str(self.model.total))

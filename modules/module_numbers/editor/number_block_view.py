@@ -1,6 +1,9 @@
 from PyQt5.QtWidgets import QWidget
 
-from .number_block_view_ui import Ui_Form
+from ui.additional_widgets import translate_widget
+
+from module_numbers.editor.number_block_view_ui import Ui_Form
+from module_numbers.translator import ModuleTranslator
 
 
 class EditorBlockView(QWidget):
@@ -12,10 +15,18 @@ class EditorBlockView(QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.translate_ui()
 
         self.init_ui()
         self.connect_widgets()
         self.connect_model_signals()
+
+    def translate_ui(self):
+        ui = self.ui
+        translator = ModuleTranslator.get_value()
+        widgets = [ui.label, ui.label_2, ui.label_3,
+                   ui.label_4, ui.label_5, ui.isRangeChbx]
+        [translate_widget(w, translator) for w in widgets]
 
     def init_ui(self):
         self.ui.rangeValueWidget.setVisible(False)

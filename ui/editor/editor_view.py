@@ -4,6 +4,7 @@ from core.data_loader import DataLoader
 from core.decorators import try_except_wrapper
 from ui.additional_widgets import ScenarioDataWidget, load_data_in_list, translate_widget
 from .editor_view_ui import Ui_Form
+from ..translator import Translator
 
 
 class EditorView(QWidget):
@@ -27,10 +28,11 @@ class EditorView(QWidget):
 
     def translate_ui(self):
         ui = self.ui
+        translator = Translator.get_translator('main')
         widgets = [ui.label, ui.label_2, ui.label_3, ui.label_10,
                    ui.backMenuBtn, ui.saveBtn, ui.addBlockBtn,
                    ui.addBtn, ui.removeBtn]
-        [translate_widget(w) for w in widgets]
+        [translate_widget(w, translator) for w in widgets]
 
     def init_ui(self):
         self.ui.saveBtn.setEnabled(False)

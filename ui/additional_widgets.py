@@ -1,8 +1,6 @@
 from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QCheckBox, QLabel, QPushButton, QListWidgetItem
 
-from .translator import Translator
-
 
 def load_data_in_list(list_wid, data_wid, data, *args):
     item = QListWidgetItem()
@@ -15,11 +13,11 @@ def load_data_in_list(list_wid, data_wid, data, *args):
     list_wid.setItemWidget(item, widget)
 
 
-def translate_widget(wid):
+def translate_widget(wid, translator):
     if hasattr(wid, 'text'):
         if not hasattr(wid, 'text_var'):
             wid.text_var = wid.text()
-        wid.setText(Translator.get_translator('main').translate(wid.text_var))
+        wid.setText(translator.translate(wid.text_var))
 
 
 class ModuleWidget(QWidget):

@@ -9,6 +9,7 @@ from ui.additional_widgets import ModuleWidget, ScenarioWidget, load_data_in_lis
 from ui.cross_widget_events import EditorMode, CrossWidgetEvents as CrossEvent
 from ui.additional_widgets import translate_widget
 from .main_view_ui import Ui_Form
+from ..translator import Translator
 
 
 class UiLogHandler(logging.Handler):
@@ -61,12 +62,13 @@ class MainView(QWidget):
 
     def translate_ui(self):
         ui = self.ui
+        translator = Translator.get_translator('main')
         widgets = [ui.label, ui.label_2, ui.label_3, ui.label_4, ui.label_5,
                    ui.scenarioMenuBtn, ui.editorMenuBtn, ui.modulesMenuBtn,
                    ui.configMenuBtn, ui.debugMenuBtn, ui.quitMenuBtn,
                    ui.starScenarioBtn, ui.startEditorBtn, ui.optionsEnableChbx,
                    ui.createNewRbn, ui.createFromRbn, ui.loadRbn]
-        [translate_widget(w) for w in widgets]
+        [translate_widget(w, translator) for w in widgets]
 
     def init_ui(self):
         self.ui.starScenarioBtn.setEnabled(False)
