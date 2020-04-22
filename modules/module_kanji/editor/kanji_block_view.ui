@@ -28,7 +28,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Kanji</string>
+         <string>KANJI_LBL</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -90,7 +90,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Key</string>
+               <string>KEY_LBL</string>
               </property>
              </widget>
             </item>
@@ -111,7 +111,7 @@
             <item>
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>Dash count</string>
+               <string>DASH_COUNT_LBL</string>
               </property>
              </widget>
             </item>
@@ -161,7 +161,7 @@
            </font>
           </property>
           <property name="text">
-           <string>On</string>
+           <string>ON_LBL</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -178,7 +178,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Translate</string>
+           <string>TRANSLATE_LBL</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -201,7 +201,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Kun</string>
+           <string>KUN_LBL</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

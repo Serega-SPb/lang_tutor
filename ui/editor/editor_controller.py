@@ -3,6 +3,7 @@ from core.memento import MementoManager, ChangeMemento
 from core.scenario import Scenario, ScenarioData
 from ui.cross_widget_events import CrossWidgetEvents, ScreenIndex as ScI
 from ui.cross_widget_events import EditorMode as eMode
+from ui.translator import Translator
 from ui.ui_messaga_bus import Event
 
 
@@ -18,6 +19,7 @@ class EditorController:
     def __init__(self, model):
         self.model = model
         self.data_loader = DataLoader()
+        self.tranlator = Translator.get_translator('main')
         CrossWidgetEvents.start_editor_event += self.start_editor_handler
         self.memento_manager = MementoManager()
         self.memento_manager.can_undo_changed += self.model.can_undo_changed.emit
@@ -25,7 +27,7 @@ class EditorController:
         NotifyEvents.scenario_name_changed += self.model.update_scenario_name
 
     def load_modules(self):
-        self.model.blocks = [m.name for m in self.data_loader.modules.values() if m.is_enabled]
+        self.model.blocks = [m for m in self.data_loader.modules.values() if m.is_enabled]
 
     # region start editor methods
 
@@ -42,7 +44,8 @@ class EditorController:
         self.load_modules()
 
     def create_new_scenario(self):
-        self.model.scenario = Scenario('<Untitled>')
+        def_name = self.tranlator.translate('UNTITLED_TEXT')
+        self.model.scenario = Scenario(f'<{def_name}>')
 
     def create_from_scenarios(self, scenarios):
         names = []
@@ -63,20 +66,6 @@ class EditorController:
     # endregion
 
     # region UI handlers
-
-    def unset_widget(self):
-        self.model.block_widget = None
-
-    def set_block_widget(self, block, index):
-        if block.module_name in self.WIDGETS.keys():
-            wid = self.WIDGETS[block.module_name]
-        else:
-            mod_init = self.data_loader.get_init(block.module_name)
-            wid = mod_init.get_editor_block_widget()
-            self.WIDGETS[block.module_name] = wid
-        self.model.block_widget = wid
-        wid.controller.set_data_index(index)
-        wid.controller.load_data(block)
 
     def save_scenario(self):
         old_sc_name = next((name for name, sc in self.data_loader.scenarios.items()
@@ -106,9 +95,7 @@ class EditorController:
     def apply_sc_block(self):
         curr_sc_block = self.model.get_current_sc_block()
         if curr_sc_block:
-            mod_name = curr_sc_block.module_name
-            mod_init = self.MODS[mod_name] if mod_name in self.MODS \
-                else self.data_loader.get_init(mod_name)
+            mod_init = curr_sc_block.module.init
             q_types = mod_init.get_question_types()
             li_wid = mod_init.get_editor_listitem_widget_cls()
             bl_wid = mod_init.get_editor_block_widget()
@@ -128,16 +115,13 @@ class EditorController:
     # region actions with record history
     def add_block(self, block):
         bl = ScenarioData.empty_init(block)
-        bl.quest_type = self.data_loader.get_init(block).get_question_types()[0]
         self.model.append_scenario_data(bl)
 
     def remove_block(self, block):
         self.model.remove_scenario_data(block)
 
     def add_block_data(self):
-        mod_name = self.model.get_current_sc_block().module_name
-        mod_init = self.MODS[mod_name] if mod_name in self.MODS \
-            else self.data_loader.get_init(mod_name)
+        mod_init = self.model.get_current_sc_block().module.init
         self.model.append_block_data(mod_init.create_new_data_object())
 
     def remove_block_data(self, value):

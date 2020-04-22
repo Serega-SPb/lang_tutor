@@ -3,9 +3,17 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout, \
                             QStackedWidget, QMessageBox
 
+from core.data_loader import DataLoader, Constants
 from core.metaclasses import Singleton
 from ui import main as main_widget, scenario as scenario_widget, editor as editor_widget
 from ui.cross_widget_events import CrossWidgetEvents, MessageType as MsgType
+from ui.translator import Translator
+
+
+def init_locale():
+    dataloader = DataLoader()
+    Translator.set_locale(dataloader.get_config_param(Constants.LOCALE))
+    Translator.register_translator('main', './')
 
 
 class AppManager(metaclass=Singleton):
@@ -22,6 +30,7 @@ class AppManager(metaclass=Singleton):
     }
 
     def __init__(self):
+        init_locale()
         self.__init_main_window()
         self.__init_widgets()
         self.__init_event_handlers()

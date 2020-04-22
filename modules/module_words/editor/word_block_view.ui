@@ -28,7 +28,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Word</string>
+         <string>WORD_LBL</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -65,7 +65,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Spelling</string>
+           <string>SPELLING_LBL</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -82,7 +82,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Translate</string>
+           <string>TRANSLATE_LBL</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -105,7 +105,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Reading</string>
+           <string>READING_LBL</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

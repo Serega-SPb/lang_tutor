@@ -4,7 +4,16 @@ from abc import ABC, abstractmethod
 class AbstractModuleInit(ABC):
 
     @abstractmethod
+    def get_name(self):
+        pass
+
+    @abstractmethod
     def get_question_types(self):
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def translate_local(var):
         pass
 
     @abstractmethod

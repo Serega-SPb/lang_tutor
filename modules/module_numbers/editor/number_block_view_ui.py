@@ -97,12 +97,12 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "Number"))
-        self.isRangeChbx.setText(_translate("Form", "is range"))
-        self.label_2.setText(_translate("Form", "value"))
-        self.label_5.setText(_translate("Form", "range"))
+        self.label.setText(_translate("Form", "NUMBER_LBL"))
+        self.isRangeChbx.setText(_translate("Form", "IS_RANGE_FLAG"))
+        self.label_2.setText(_translate("Form", "VALUE_LBL"))
+        self.label_5.setText(_translate("Form", "RANGE_LBL"))
         self.label_4.setText(_translate("Form", "-"))
-        self.label_3.setText(_translate("Form", "step"))
+        self.label_3.setText(_translate("Form", "STEP_LBL"))
 
 
 if __name__ == "__main__":

@@ -2,20 +2,36 @@ from core.descriptors import NotifyProperty
 from ui.ui_messaga_bus import Event
 
 
-class ScenarioData:
-    __slots__ = ('module_name', '_quest_type', 'lazy_init', '_data', 'quest_type_changed')
+class QuestType:
 
-    def __init__(self, mod_name, quest_type, lazy_init):
-        self.module_name = mod_name
+    def __init__(self, value, ui_func):
+        self.value = value
+        self.ui_func = ui_func
+
+    @property
+    def ui(self):
+        return self.ui_func(self.value)
+
+    def __eq__(self, other):
+        return other.value == self.value if isinstance(other, QuestType) else False
+
+
+class ScenarioData:
+    __slots__ = ('module', '_quest_type', 'lazy_init', '_data', 'quest_type_changed')
+
+    def __init__(self, mod, quest_type, lazy_init):
+        self.module = mod
         self.quest_type_changed = Event(str)
-        self._quest_type = NotifyProperty('quest_type', quest_type)
+        func = self.module.init.translate_local if self.module.init else lambda x: quest_type
+        qt = QuestType(quest_type, func)
+        self._quest_type = NotifyProperty('quest_type', qt)
         self._quest_type += self.quest_type_changed.emit
         self.lazy_init = lazy_init
         self._data = None
 
     @classmethod
-    def empty_init(cls, mod_name):
-        ins = cls(mod_name, '', None)
+    def empty_init(cls, module):
+        ins = cls(module, module.init.get_question_types()[0], None)
         ins._data = []
         return ins
 

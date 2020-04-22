@@ -148,12 +148,12 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "Kanji"))
-        self.label_7.setText(_translate("Form", "Key"))
-        self.label_3.setText(_translate("Form", "Dash count"))
-        self.label_4.setText(_translate("Form", "On"))
-        self.label_6.setText(_translate("Form", "Translate"))
-        self.label_5.setText(_translate("Form", "Kun"))
+        self.label.setText(_translate("Form", "KANJI_LBL"))
+        self.label_7.setText(_translate("Form", "KEY_LBL"))
+        self.label_3.setText(_translate("Form", "DASH_COUNT_LBL"))
+        self.label_4.setText(_translate("Form", "ON_LBL"))
+        self.label_6.setText(_translate("Form", "TRANSLATE_LBL"))
+        self.label_5.setText(_translate("Form", "KUN_LBL"))
 
 
 if __name__ == "__main__":

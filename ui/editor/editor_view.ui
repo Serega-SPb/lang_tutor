@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QPushButton" name="backMenuBtn">
      <property name="text">
-      <string>Back to menu</string>
+      <string>BACK_TO_MENU_BTN</string>
      </property>
     </widget>
    </item>
@@ -53,7 +53,7 @@
      <item>
       <widget class="QPushButton" name="saveBtn">
        <property name="text">
-        <string>SAVE</string>
+        <string>SAVE_BTN</string>
        </property>
       </widget>
      </item>
@@ -80,7 +80,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Name</string>
+        <string>NAME_LBL</string>
        </property>
       </widget>
      </item>
@@ -90,7 +90,7 @@
      <item row="1" column="0" colspan="2">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Blocks</string>
+        <string>BLOCKS_LBL</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -111,7 +111,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Block</string>
+          <string>BLOCK_LBL</string>
          </property>
         </widget>
        </item>
@@ -127,7 +127,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Add</string>
+          <string>ADD_BTN</string>
          </property>
         </widget>
        </item>
@@ -161,7 +161,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Quest type</string>
+           <string>QUEST_TYPE_LBL</string>
           </property>
          </widget>
         </item>
@@ -188,14 +188,14 @@
           <item>
            <widget class="QPushButton" name="addBtn">
             <property name="text">
-             <string>Add</string>
+             <string>ADD_BTN</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="removeBtn">
             <property name="text">
-             <string>Remove</string>
+             <string>REMOVE_BTN</string>
             </property>
            </widget>
           </item>

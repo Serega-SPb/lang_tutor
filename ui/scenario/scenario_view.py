@@ -1,7 +1,10 @@
 from PyQt5.QtWidgets import QWidget
 
+from core.decorators import try_except_wrapper
 from .scenario_view_ui import Ui_Form
 from ui.exercise_ui_manager import ExerciseManager
+from ..additional_widgets import translate_widget
+from ..translator import Translator
 
 
 class ScenarioView(QWidget):
@@ -16,10 +19,17 @@ class ScenarioView(QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.translate_ui()
 
         self.init_ui()
         self.connect_widgets()
         self.connect_model_signals()
+
+    def translate_ui(self):
+        ui = self.ui
+        translator = Translator.get_translator('main')
+        widgets = [ui.answerBtn, ui.backMenuBtn]
+        [translate_widget(w, translator) for w in widgets]
 
     def init_ui(self):
         self.ui.totalLbl.setText(str(self.model.total))
@@ -35,16 +45,21 @@ class ScenarioView(QWidget):
         self.model.scenario_loaded += self.set_counter
         self.model.current_exercise_changed += self.load_exercise
 
+    @try_except_wrapper
     def load_exercise(self, exercise):
+
+        if self.current_exercise_widget:
+            self.ui.exerciseLayout.removeWidget(self.current_exercise_widget)
+            self.current_exercise_widget.setParent(None)
+            self.current_exercise_widget.send_answer_event -= self.ui.answerBtn.click
+            self.current_exercise_widget = None
+
         if exercise:
             self.ui.currentLbl.setText(str(self.model.index + 1))
-
-            if self.current_exercise_widget:
-                self.ui.exerciseLayout.removeWidget(self.current_exercise_widget)
-                self.current_exercise_widget.setParent(None)
-
             self.current_exercise_widget = self.exercise_manager.get_widget(*exercise, self)
+            self.current_exercise_widget.send_answer_event += self.ui.answerBtn.click
             self.ui.exerciseLayout.addWidget(self.current_exercise_widget)
+            self.current_exercise_widget.setFocus()
         else:
             self.controller.end_scenario()
 

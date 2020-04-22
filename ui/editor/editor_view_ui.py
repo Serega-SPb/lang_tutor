@@ -134,17 +134,17 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.backMenuBtn.setText(_translate("Form", "Back to menu"))
+        self.backMenuBtn.setText(_translate("Form", "BACK_TO_MENU_BTN"))
         self.undoBtn.setText(_translate("Form", "<-"))
         self.redoBtn.setText(_translate("Form", "->"))
-        self.saveBtn.setText(_translate("Form", "SAVE"))
-        self.label.setText(_translate("Form", "Name"))
-        self.label_2.setText(_translate("Form", "Blocks"))
-        self.label_3.setText(_translate("Form", "Block"))
-        self.addBlockBtn.setText(_translate("Form", "Add"))
-        self.label_10.setText(_translate("Form", "Quest type"))
-        self.addBtn.setText(_translate("Form", "Add"))
-        self.removeBtn.setText(_translate("Form", "Remove"))
+        self.saveBtn.setText(_translate("Form", "SAVE_BTN"))
+        self.label.setText(_translate("Form", "NAME_LBL"))
+        self.label_2.setText(_translate("Form", "BLOCKS_LBL"))
+        self.label_3.setText(_translate("Form", "BLOCK_LBL"))
+        self.addBlockBtn.setText(_translate("Form", "ADD_BTN"))
+        self.label_10.setText(_translate("Form", "QUEST_TYPE_LBL"))
+        self.addBtn.setText(_translate("Form", "ADD_BTN"))
+        self.removeBtn.setText(_translate("Form", "REMOVE_BTN"))
 
 
 if __name__ == "__main__":

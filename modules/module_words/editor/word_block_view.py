@@ -1,6 +1,9 @@
 from PyQt5.QtWidgets import QWidget
 
-from .word_block_view_ui import Ui_Form
+from ui.additional_widgets import translate_widget
+
+from module_words.editor.word_block_view_ui import Ui_Form
+from module_words.translator import ModuleTranslator
 
 
 class EditorBlockView(QWidget):
@@ -12,9 +15,16 @@ class EditorBlockView(QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.translate_ui()
 
         self.connect_widgets()
         self.connect_model_signals()
+
+    def translate_ui(self):
+        ui = self.ui
+        translator = ModuleTranslator.get_value()
+        widgets = [ui.label_4, ui.label_5, ui.label_6, ui.label]
+        [translate_widget(w, translator) for w in widgets]
 
     def connect_widgets(self):
         self.ui.spellingLnEd.textEdited.connect(self.controller.set_word_spelling)
