@@ -1,9 +1,11 @@
 import random
 
 from core.decorators import try_except_wrapper
+from core.exercise_factory import ExerciseFactory
 from ui.cross_widget_events import ScreenIndex as ScI
 from ui.cross_widget_events import CrossWidgetEvents, MessageType as MsgType
 from ui.translator import Translator
+from ui.exercise_ui_manager import get_widget
 
 
 class ScenarioController:
@@ -19,9 +21,10 @@ class ScenarioController:
         self.model.name = scenario.name
         exercises = []
         for data in scenario.scenario_data:
-            tuple_lamb = lambda x: (data.module.init, x)
+            get_widget_lamb = lambda x: (get_widget(data.module.init, x), x)
             q_type = data.quest_type
-            exercises.extend(list(map(tuple_lamb, data.module.init.get_exercises(data.data, q_type, opt_enb))))
+            factory = ExerciseFactory(data.module.init.get_question_generator())
+            exercises.extend(list(map(get_widget_lamb, factory.create_exercises(data.data, q_type, opt_enb))))
         random.shuffle(exercises)
         self.model.set_exercises(exercises)
 

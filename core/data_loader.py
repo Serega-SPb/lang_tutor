@@ -10,6 +10,7 @@ from .log_config import LOGGER_NAME
 from .module import Module
 from .scenario import Scenario, ScenarioData
 from .metaclasses import Singleton
+from . import module_manager
 
 
 class Constants:
@@ -33,7 +34,7 @@ class DataLoader(metaclass=Singleton):
 
     def __init__(self):
         self.logger = logging.getLogger(LOGGER_NAME)
-        Module.get_mod_dir = lambda x: self.modules_dir
+        module_manager.get_module_dir = lambda: self.modules_dir
         self.load_config()
         self.load_modules()
         self.load_scenarios()
@@ -78,22 +79,32 @@ class DataLoader(metaclass=Singleton):
 
     # region Module
     def load_modules(self):
-        self.modules.clear()
-        if not os.path.isdir(self.modules_dir):
-            self.logger.warning('Modules directory not found')
-            return
+        def init_module(mod_name, enb_status):
+            mod = Module(mod_name, is_enabled=enb_status)
+            mod.enable_changed += lambda n, b: self.on_mod_status_changed(mod_cfg, n, b)
+            self.modules[mod_name] = mod
 
+        self.modules.clear()
         mod_cfg = self.get_config_param(Constants.MODULES)
         if mod_cfg is None:
             mod_cfg = Config(Constants.MODULES)
             self.__user_config.add(mod_cfg)
+        d_path = os.path.abspath(self.modules_dir)
+        if not os.path.isdir(self.modules_dir):
+            self.logger.warning('Modules directory not found')
+        else:
+            mods = mod_cfg.get_children()
+            for m_dir in os.listdir(self.modules_dir):
+                m_path = os.path.join(self.modules_dir, m_dir)
+                m_dir = os.path.splitext(m_dir)[0]
+                if not (os.path.isdir(m_path) or m_path.endswith('.zip')) or m_dir in self.modules:
+                    continue
+                status = mod_cfg.get_param(m_dir)
+                init_module(m_dir, status)
 
-        mods = mod_cfg.get_children()
-        for m_dir in os.listdir(self.modules_dir):
-            status = mod_cfg.get_param(m_dir)
-            mod = Module(m_dir, is_enabled=status)
-            mod.enable_changed += lambda n, b: self.on_mod_status_changed(mod_cfg, n, b)
-            self.modules[m_dir] = mod
+        not_loaded = [name for name in mod_cfg.get_children().keys() if name not in self.modules]
+        for name in not_loaded:
+            init_module(name, mod_cfg.get_param(name))
 
     def on_mod_status_changed(self, mod_cfg, mod_name, value):
         mod_cfg.set_param(mod_name, value)

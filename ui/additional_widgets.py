@@ -39,6 +39,7 @@ class ModuleWidget(QWidget):
 
     def update_status(self, status):
         self.module.is_enabled = status
+        self.modChbx.setChecked(self.module.is_enabled)
         self.update_lbl()
 
     def update_lbl(self):

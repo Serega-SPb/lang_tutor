@@ -2,6 +2,7 @@ import os
 import json
 
 from core.decorators import try_except_wrapper
+from core.file_reader import get_file_reader
 from .cross_widget_events import CrossWidgetEvents
 
 
@@ -46,7 +47,7 @@ class Translator:
         filename = f'{locale}.json'
         filepath = os.path.join(self.__path_to_locale, self.LOCALE_DIR, filename)
 
-        with open(filepath, 'r', encoding='utf-8') as file:
+        with get_file_reader(filepath) as file:
             self.__locale_dict = json.load(file)
 
     def translate(self, text):

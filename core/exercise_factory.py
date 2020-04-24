@@ -1,5 +1,6 @@
 import random
 
+from core.decorators import try_except_wrapper
 from core.exercise import Exercise, ExerciseWithOptions
 from core.log_config import logger
 
@@ -7,9 +8,9 @@ from core.log_config import logger
 class ExerciseFactory:
 
     def __init__(self, quest_generator_cls):
-        self.logger = logger
         self.quest_generator_cl = quest_generator_cls
 
+    @try_except_wrapper
     def create_exercises(self, scenario, quest_type, ex_with_opt):
         self.quest_gen = self.quest_generator_cl(scenario)
         quests = self.quest_gen.get_questions(quest_type.value)
