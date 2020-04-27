@@ -64,7 +64,7 @@ class EditorView(QWidget):
         self.model.scenario_changed += self.load_scenario
         self.model.scenario_name_changed += self.ui.scenarioNameLed.setText
         self.model.blocks_changed += self.load_blocks
-        self.model.can_undo_changed += self.ui.saveBtn.setEnabled
+        self.model.can_save_changed += self.ui.saveBtn.setEnabled
         self.model.can_undo_changed += self.ui.undoBtn.setEnabled
         self.model.can_redo_changed += self.ui.redoBtn.setEnabled
 

@@ -65,9 +65,10 @@ class MainView(QWidget):
         translator = Translator.get_translator('main')
         widgets = [ui.label, ui.label_2, ui.label_3, ui.label_4, ui.label_5,
                    ui.scenarioMenuBtn, ui.editorMenuBtn, ui.modulesMenuBtn,
-                   ui.configMenuBtn, ui.debugMenuBtn, ui.quitMenuBtn,
-                   ui.starScenarioBtn, ui.startEditorBtn, ui.optionsEnableChbx,
-                   ui.createNewRbn, ui.createFromRbn, ui.loadRbn]
+                   ui.configMenuBtn, ui.debugMenuBtn, ui.quitMenuBtn, ui.optionsEnableChbx,
+                   ui.starScenarioBtn, ui.startEditorBtn, ui.deleteBtn,
+                   ui.createNewRbn, ui.createFromRbn, ui.loadRbn, ui.deleteRbn,
+                   ui.scenarioListRefreshBtn, ui.modulesListRefreshBtn]
         [translate_widget(w, translator) for w in widgets]
 
     def init_ui(self):
@@ -83,14 +84,9 @@ class MainView(QWidget):
 
         self.ui.loadList.setVisible(False)
         self.ui.createFromList.setVisible(False)
+        self.ui.deleteList.setVisible(False)
+        self.ui.deleteBtn.setVisible(False)
         self.ui.createNewRbn.setChecked(True)
-        self.ui.createNewRbn.toggled.connect(
-            lambda: self.controller.set_editor_mode(EditorMode.CREATE_NEW))
-        self.ui.createFromRbn.toggled.connect(
-            lambda: self.controller.set_editor_mode(EditorMode.CREATE_FROM))
-        self.ui.loadRbn.toggled.connect(
-            lambda: self.controller.set_editor_mode(EditorMode.LOAD))
-        self.ui.startEditorBtn.clicked.connect(self.on_start_editor)
 
     def init_menu(self):
         self.menu_group = QButtonGroup()
@@ -107,8 +103,6 @@ class MainView(QWidget):
         self.ui.debugMenuBtn.clicked.connect(lambda: self.select_screen(Menu.DEBUG))
         # TODO ? statisticMenu ?
         self.ui.scenarioMenuBtn.click()
-        # self.ui.scenarioMenuBtn.setChecked(True)
-        # self.select_screen(Menu.SCENARIO)
 
     def save_ui_config(self, path, value):
         self.data_loader.set_config_param(path, value)
@@ -122,6 +116,14 @@ class MainView(QWidget):
         self.ui.modulesListRefreshBtn.clicked.connect(self.controller.reload_modules)
         self.ui.scenarioListRefreshBtn.clicked.connect(self.controller.reload_scenarios)
         self.ui.starScenarioBtn.clicked.connect(self.on_start_click)
+        self.ui.createNewRbn.toggled.connect(
+            lambda: self.controller.set_editor_mode(EditorMode.CREATE_NEW))
+        self.ui.createFromRbn.toggled.connect(
+            lambda: self.controller.set_editor_mode(EditorMode.CREATE_FROM))
+        self.ui.loadRbn.toggled.connect(
+            lambda: self.controller.set_editor_mode(EditorMode.LOAD))
+        self.ui.startEditorBtn.clicked.connect(self.on_start_editor)
+        self.ui.deleteBtn.clicked.connect(self.on_delete_click)
 
     def connect_model_signals(self):
         self.model.modules_changed += self.load_modules
@@ -136,14 +138,12 @@ class MainView(QWidget):
 
     @try_except_wrapper
     def load_scenarios(self):
-        self.ui.scenarioList.clear()
-        self.ui.createFromList.clear()
-        self.ui.loadList.clear()
+        ui_lists = [self.ui.scenarioList, self.ui.createFromList,
+                    self.ui.loadList, self.ui.deleteList]
+        [wid.clear() for wid in ui_lists]
         scens = self.model.scenarios
         for sc in scens:
-            load_data_in_list(self.ui.scenarioList, ScenarioWidget, sc)
-            load_data_in_list(self.ui.createFromList, ScenarioWidget, sc)
-            load_data_in_list(self.ui.loadList, ScenarioWidget, sc)
+            [load_data_in_list(wid, ScenarioWidget, sc) for wid in ui_lists]
 
     @try_except_wrapper
     def on_start_click(self, *args):
@@ -163,3 +163,9 @@ class MainView(QWidget):
         elif mode == EditorMode.LOAD:
             args = self.ui.loadList.currentItem().data
         self.controller.start_editor(mode, args)
+
+    @try_except_wrapper
+    def on_delete_click(self, *args):
+        items = self.ui.deleteList.selectedItems()
+        args = [i.data.name for i in items]
+        self.controller.delete_scenarios(args)

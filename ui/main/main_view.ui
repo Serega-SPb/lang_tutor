@@ -146,19 +146,19 @@
        <item row="0" column="1">
         <widget class="QPushButton" name="scenarioListRefreshBtn">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="maximumSize">
+         <property name="minimumSize">
           <size>
-           <width>25</width>
+           <width>125</width>
            <height>25</height>
           </size>
          </property>
          <property name="text">
-          <string>R</string>
+          <string>REFRESH_BTN</string>
          </property>
         </widget>
        </item>
@@ -222,19 +222,19 @@
        <item row="0" column="1">
         <widget class="QPushButton" name="modulesListRefreshBtn">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="maximumSize">
+         <property name="minimumSize">
           <size>
-           <width>25</width>
+           <width>125</width>
            <height>25</height>
           </size>
          </property>
          <property name="text">
-          <string>R</string>
+          <string>REFRESH_BTN</string>
          </property>
         </widget>
        </item>
@@ -359,6 +359,25 @@
            <widget class="QListWidget" name="loadList"/>
           </item>
           <item>
+           <widget class="QRadioButton" name="deleteRbn">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>DELETE_MODE</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="deleteList">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer_4">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -370,6 +389,18 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="deleteBtn">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>DELETE_BTN</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="startEditorBtn">
@@ -391,6 +422,9 @@
          <zorder>loadList</zorder>
          <zorder>createFromList</zorder>
          <zorder>verticalSpacer_4</zorder>
+         <zorder>deleteRbn</zorder>
+         <zorder>deleteList</zorder>
+         <zorder>deleteBtn</zorder>
         </widget>
        </item>
       </layout>
@@ -408,8 +442,8 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>451</x>
-     <y>147</y>
+     <x>797</x>
+     <y>120</y>
     </hint>
     <hint type="destinationlabel">
      <x>469</x>
@@ -424,12 +458,60 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>509</x>
-     <y>370</y>
+     <x>797</x>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
      <x>520</x>
-     <y>472</y>
+     <y>404</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>deleteRbn</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>deleteList</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>591</x>
+     <y>431</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>577</x>
+     <y>547</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>deleteRbn</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>deleteBtn</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>525</x>
+     <y>428</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>554</x>
+     <y>595</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>deleteRbn</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>startEditorBtn</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>647</x>
+     <y>429</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>637</x>
+     <y>635</y>
     </hint>
    </hints>
   </connection>

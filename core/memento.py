@@ -185,6 +185,7 @@ class MementoManager(metaclass=Singleton):
 
     can_undo_changed = Event(bool)
     can_redo_changed = Event(bool)
+    index_changed = Event(int)
 
     def __init__(self):
         self.logger = logger
@@ -195,6 +196,10 @@ class MementoManager(metaclass=Singleton):
         self._history = []
         self.subject = subject
         self.update_status()
+
+    @property
+    def index(self):
+        return self._index
 
     @property
     def can_undo(self):
@@ -246,3 +251,4 @@ class MementoManager(metaclass=Singleton):
     def update_status(self):
         self.can_undo_changed.emit(self.can_undo)
         self.can_redo_changed.emit(self.can_redo)
+        self.index_changed.emit(self.index)

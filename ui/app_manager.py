@@ -31,6 +31,7 @@ class AppManager(metaclass=Singleton):
 
     def __init__(self):
         init_locale()
+        self.translator = Translator.get_translator('main')
         self.__init_main_window()
         self.__init_widgets()
         self.__init_event_handlers()
@@ -64,6 +65,7 @@ class AppManager(metaclass=Singleton):
     def __init_event_handlers(self):
         CrossWidgetEvents.change_screen_event += self.select_active_widget
         CrossWidgetEvents.show_message_event += self.show_info_msb
+        CrossWidgetEvents.show_question_event += self.show_question_msb
 
     def get_main_window(self):
         return self.main_window
@@ -75,3 +77,21 @@ class AppManager(metaclass=Singleton):
         if t not in self.MSB_TYPE.keys():
             t = MsgType.INFO
         self.MSB_TYPE[t](self.main_window, title, message)
+
+    def __init_quest_msb(self):
+        quest_msb = QMessageBox()
+        quest_msb.setIcon(QMessageBox.Question)
+        quest_msb.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        yes_btn = quest_msb.button(QMessageBox.Yes)
+        yes_btn.setText(self.translator.translate('YES_ANSWER'))
+        no_btn = quest_msb.button(QMessageBox.No)
+        no_btn.setText(self.translator.translate('NO_ANSWER'))
+        return quest_msb
+
+    def show_question_msb(self, title, message, yes_action):
+        quest_msb = self.__init_quest_msb()
+        quest_msb.setWindowTitle(title)
+        quest_msb.setText(message)
+        answer = quest_msb.exec()
+        if answer == QMessageBox.Yes:
+            yes_action()

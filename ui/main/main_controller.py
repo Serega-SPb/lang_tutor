@@ -47,6 +47,15 @@ class MainController:
         CrossEvent.start_editor_event.emit(mode, *args)
         CrossEvent.change_screen_event.emit(ScI.EDITOR)
 
+    def delete_scenarios(self, scenarios):
+        def _action():
+            [self.data_loader.remove_scenario(sc) for sc in scenarios]
+            self.reload_scenarios()
+
+        title = self.tranlator.translate('QUESTION_TITLE')
+        msg = self.tranlator.translate('REMOVE_SELECTED_TEXT')
+        CrossEvent.show_question_event.emit(title, msg, _action)
+
     def reloads(self):
         self.reload_modules()
         self.reload_scenarios()

@@ -150,13 +150,14 @@ class DataLoader(metaclass=Singleton):
         scenario = Scenario(scenario_name, required_modules=req_mods, scenario_data=sc_data)
         self.scenarios[scenario_name] = scenario
 
+    @try_except_wrapper
     def save_scenario(self, scenario):
         file = os.path.join(self.scenarios_dir, f'{scenario.name}.json')
         result = []
         for sc_data in scenario.scenario_data:
             block = {
                 Constants.MODULE: sc_data.module.name,
-                Constants.QUESTION_TYPE: sc_data.quest_type,
+                Constants.QUESTION_TYPE: sc_data.quest_type.value,
                 Constants.DATA: sc_data.module.init.serialize_block(sc_data.data)
             }
             result.append(block)
@@ -164,6 +165,7 @@ class DataLoader(metaclass=Singleton):
         with open(file, 'w', encoding='utf-8') as writer:
             json.dump(result, writer)
 
+    @try_except_wrapper
     def remove_scenario(self, scenario_name):
         self.scenarios.pop(scenario_name)
         os.remove(os.path.join(self.scenarios_dir, f'{scenario_name}.json'))

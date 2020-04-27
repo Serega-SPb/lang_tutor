@@ -52,6 +52,8 @@ class Ui_Form(object):
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.scenarioBlocksList = QtWidgets.QListWidget(Form)
+        self.scenarioBlocksList.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
+        self.scenarioBlocksList.setDefaultDropAction(QtCore.Qt.MoveAction)
         self.scenarioBlocksList.setObjectName("scenarioBlocksList")
         self.gridLayout.addWidget(self.scenarioBlocksList, 2, 0, 1, 2)
         self.label_2 = QtWidgets.QLabel(Form)
