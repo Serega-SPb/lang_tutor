@@ -1,3 +1,4 @@
+![Build .exe](https://github.com/Serega-SPb/lang_tutor/workflows/Build%20.exe/badge.svg?branch=master)
 # lang_tutor
 
 Install packages:
