@@ -1,14 +1,9 @@
-import os
-from importlib import util
-
-from .decorators import try_except_wrapper
+from .module_manager import get_module_init
 from ui.ui_messaga_bus import Event
 
 
 class Module:
     __slots__ = ('name', '_is_enabled', '_init', 'enable_changed')
-
-    get_mod_dir = None
 
     def __init__(self, name, **kwargs):
         self.enable_changed = Event(str, bool)
@@ -38,14 +33,9 @@ class Module:
     def init(self):
         return self._init
 
-    @try_except_wrapper
     def activate_module(self):
-        path = os.path.join(self.get_mod_dir(), self.name, 'init.py')
-        spec = util.spec_from_file_location(self.name, path)
-        mod = util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        self._init = mod.Init()
-        self._is_enabled = True
+        self._init = get_module_init(self.name)
+        self._is_enabled = self._init is not None
 
     def deactivate_module(self):
         self._is_enabled = False

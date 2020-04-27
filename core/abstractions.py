@@ -17,7 +17,7 @@ class AbstractModuleInit(ABC):
         pass
 
     @abstractmethod
-    def get_exercises(self, scenario_block, question_type, ex_with_opt=True):
+    def get_question_generator(self):
         pass
 
     @abstractmethod

@@ -22,8 +22,11 @@ class ScenarioData:
     def __init__(self, mod, quest_type, lazy_init):
         self.module = mod
         self.quest_type_changed = Event(str)
-        func = self.module.init.translate_local if self.module.init else lambda x: quest_type
-        qt = QuestType(quest_type, func)
+        if isinstance(quest_type, str):
+            func = self.module.init.translate_local if self.module.init else lambda x: quest_type
+            qt = QuestType(quest_type, func)
+        else:
+            qt = quest_type
         self._quest_type = NotifyProperty('quest_type', qt)
         self._quest_type += self.quest_type_changed.emit
         self.lazy_init = lazy_init

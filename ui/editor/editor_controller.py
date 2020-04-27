@@ -7,14 +7,12 @@ from ui.translator import Translator
 from ui.ui_messaga_bus import Event
 
 
-class NotifyEvents:
-    scenario_name_changed = Event()
-
-
 class EditorController:
 
     WIDGETS = {}
     MODS = {}
+
+    _save_index = -1
 
     def __init__(self, model):
         self.model = model
@@ -24,7 +22,12 @@ class EditorController:
         self.memento_manager = MementoManager()
         self.memento_manager.can_undo_changed += self.model.can_undo_changed.emit
         self.memento_manager.can_redo_changed += self.model.can_redo_changed.emit
-        NotifyEvents.scenario_name_changed += self.model.update_scenario_name
+        self.memento_manager.index_changed += \
+            lambda x: self.model.can_save_changed.emit(self.can_save)
+
+    @property
+    def can_save(self):
+        return self._save_index != self.memento_manager.index
 
     def load_modules(self):
         self.model.blocks = [m for m in self.data_loader.modules.values() if m.is_enabled]
@@ -42,6 +45,7 @@ class EditorController:
             raise ValueError('Inccorect editor mode')
         self.memento_manager.set_subject(self.model.scenario)
         self.load_modules()
+        self._save_index = -1
 
     def create_new_scenario(self):
         def_name = self.tranlator.translate('UNTITLED_TEXT')
@@ -73,6 +77,8 @@ class EditorController:
         if old_sc_name:
             self.data_loader.remove_scenario(old_sc_name)
         self.data_loader.save_scenario(self.model.scenario)
+        self._save_index = self.memento_manager.index
+        self.model.can_save_changed.emit(self.can_save)
 
     def undo(self):
         self.memento_manager.undo()
@@ -81,12 +87,21 @@ class EditorController:
         self.memento_manager.redo()
 
     def back_to_menu(self, *args):
-        # if self.model.can_undo:
-        #     # TODO QuestMsgBx Cancel changes or not? Y/N
-        #     self.memento_manager.cancel()
-        self.WIDGETS.clear()
-        CrossWidgetEvents.reload_scenarios_event.emit()
-        CrossWidgetEvents.change_screen_event.emit(ScI.MAIN)
+        def _return_action():
+            self.WIDGETS.clear()
+            CrossWidgetEvents.reload_scenarios_event.emit()
+            CrossWidgetEvents.change_screen_event.emit(ScI.MAIN)
+
+        def _cancel_action():
+            self.memento_manager.cancel()
+            _return_action()
+
+        if self.can_save:
+            title = self.tranlator.translate('QUESTION_TITLE')
+            msg = self.tranlator.translate('CANCEL_UNSAVED_TEXT')
+            CrossWidgetEvents.show_question_event.emit(title, msg, _cancel_action)
+        else:
+            _return_action()
 
     def set_sc_block_index(self, value):
         self.model.current_sc_block_index = value
@@ -131,8 +146,10 @@ class EditorController:
         if value:
             self.model.current_quest_type = value
 
-    @ChangeMemento('name', NotifyEvents.scenario_name_changed)
     def change_scenarion_name(self, value):
-        self.model.scenario.name = value
+        @ChangeMemento('name', self.model.update_scenario_name_event)
+        def action():
+            self.model.scenario.name = value
+        action()
 
     # endregion

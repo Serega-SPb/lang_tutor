@@ -7,7 +7,6 @@ class NumberWidget(QWidget):
         super().__init__(parent)
         self.number = number
         self.ui()
-        print(self.__module__)
 
     def ui(self):
         grid = QGridLayout(self)

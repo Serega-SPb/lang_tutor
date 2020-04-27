@@ -11,6 +11,7 @@ class EditorModel:
     scenario_name_changed = Event(str)
     can_undo_changed = Event(bool)
     can_redo_changed = Event(bool)
+    can_save_changed = Event(bool)
     blocks_changed = Event(list)
 
     quest_types_changed = Event(list)
@@ -24,16 +25,13 @@ class EditorModel:
     block_widget_changed = Event(object)
 
     update_scenario_event = Event()
+    update_scenario_name_event = Event()
     update_curr_sc_block = Event()
     update_current_quest_type_event = Event()
 
     def __init__(self):
         self._scenario = NotifyProperty('scenario')
         self._scenario += self.scenario_changed.emit
-        self._can_undo = NotifyProperty('can_undo', False)
-        self._can_undo += self.can_undo_changed.emit
-        self._can_redo = NotifyProperty('can_redo', False)
-        self._can_redo += self.can_redo_changed.emit
         self._blocks = NotifyProperty('blocks', list())
         self._blocks += self.blocks_changed.emit
 
@@ -50,6 +48,7 @@ class EditorModel:
         self._block_widget = NotifyProperty('_block_widget')
         self._block_widget += self.block_widget_changed.emit
         self.update_scenario_event += self.update_scenario
+        self.update_scenario_name_event += self.update_scenario_name
         self.update_curr_sc_block += self.send_sc_block
         self.update_current_quest_type_event += lambda: self.current_quest_type_changed.emit(self.current_quest_type)
 
@@ -61,22 +60,6 @@ class EditorModel:
     @scenario.setter
     def scenario(self, value):
         self._scenario.set(value)
-
-    @property
-    def can_undo(self):
-        return self._can_undo.get()
-
-    @can_undo.setter
-    def can_undo(self, value):
-        self._can_undo.set(value)
-
-    @property
-    def can_redo(self):
-        return self._can_redo.get()
-
-    @can_redo.setter
-    def can_redo(self, value):
-        self._can_redo.set(value)
 
     @property
     def blocks(self):
@@ -119,7 +102,7 @@ class EditorModel:
         @ChangeMemento(self.get_block_prop_path('quest_type'), self.update_current_quest_type_event)
         def wrapper():
             self.get_current_sc_block().quest_type = value
-            self.current_quest_type_changed.emit(value)
+            self.current_quest_type_changed.emit(value.value)
 
         curr_bl = self.get_current_sc_block()
 

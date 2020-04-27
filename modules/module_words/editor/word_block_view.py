@@ -2,8 +2,8 @@ from PyQt5.QtWidgets import QWidget
 
 from ui.additional_widgets import translate_widget
 
-from module_words.editor.word_block_view_ui import Ui_Form
-from module_words.translator import ModuleTranslator
+from ..editor.word_block_view_ui import Ui_Form
+from ..translator import ModuleTranslator
 
 
 class EditorBlockView(QWidget):

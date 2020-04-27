@@ -18,6 +18,10 @@ def translate_widget(wid, translator):
         if not hasattr(wid, 'text_var'):
             wid.text_var = wid.text()
         wid.setText(translator.translate(wid.text_var))
+    elif hasattr(wid, 'title'):
+        if not hasattr(wid, 'title_var'):
+            wid.title_var = wid.title()
+        wid.setTitle(translator.translate(wid.title_var))
 
 
 class ModuleWidget(QWidget):
@@ -39,6 +43,7 @@ class ModuleWidget(QWidget):
 
     def update_status(self, status):
         self.module.is_enabled = status
+        self.modChbx.setChecked(self.module.is_enabled)
         self.update_lbl()
 
     def update_lbl(self):

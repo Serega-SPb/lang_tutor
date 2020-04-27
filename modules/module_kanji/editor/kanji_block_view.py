@@ -3,9 +3,9 @@ from PyQt5.QtWidgets import QWidget
 from core.decorators import try_except_wrapper
 from ui.additional_widgets import translate_widget
 
-from module_kanji.editor.additional_widgets_kan import KeyComboBox
-from module_kanji.editor.kanji_block_view_ui import Ui_Form
-from module_kanji.translator import ModuleTranslator
+from ..editor.additional_widgets_kan import KeyComboBox
+from ..editor.kanji_block_view_ui import Ui_Form
+from ..translator import ModuleTranslator
 
 
 class EditorBlockView(QWidget):

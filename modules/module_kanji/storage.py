@@ -2,6 +2,7 @@ import os
 import logging
 import json
 
+from core.file_reader import get_file_reader
 from core.log_config import LOGGER_NAME
 from core.metaclasses import Singleton
 from core.decorators import try_except_wrapper
@@ -21,10 +22,10 @@ class KanjiStorage(metaclass=Singleton):
     @try_except_wrapper
     def load_keys(self):
         file = os.path.join(os.path.dirname(__file__), self.__kanji_keys_file)
-        if not os.path.exists(file):
-            raise FileNotFoundError('Kanji keys file not found')
+        # if not os.path.exists(file):
+        #     raise FileNotFoundError('Kanji keys file not found')
 
-        with open(file, 'r') as file:
+        with get_file_reader(file) as file:
             js_keys = json.load(file)
 
         for js in js_keys:

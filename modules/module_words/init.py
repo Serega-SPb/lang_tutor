@@ -1,14 +1,13 @@
 import os
 
 from core.abstractions import AbstractModuleInit
-from core.exercise_factory import ExerciseFactory
 
-from module_words.editor.additional_widgets_word import WordWidget
-from module_words.question_generator import QuestionTypes, WordsQuestionGenerator
-from module_words.serializer import WordsScenarioSerilizer
-from module_words.editor import init as editor_block
-from module_words.word import Word
-from module_words.translator import ModuleTranslator
+from .editor.additional_widgets_word import WordWidget
+from .question_generator import QuestionTypes, WordsQuestionGenerator
+from .serializer import WordsScenarioSerilizer
+from .editor import init as editor_block
+from .word import Word
+from .translator import ModuleTranslator
 
 
 DIR = os.path.dirname(__file__)
@@ -18,7 +17,6 @@ QuestionTypes.translate_func = ModuleTranslator.get_value().translate
 
 
 class Init(AbstractModuleInit):
-    __exercise_factory = ExerciseFactory(WordsQuestionGenerator)
     __scenario_serializer = WordsScenarioSerilizer()
 
     def get_name(self):
@@ -33,6 +31,9 @@ class Init(AbstractModuleInit):
 
     def get_exercises(self, scenario_block, question_type, ex_with_opt=True):
         return self.__exercise_factory.create_exercises(scenario_block, question_type, ex_with_opt)
+
+    def get_question_generator(self):
+        return WordsQuestionGenerator
 
     def serialize_block(self, data):
         return self.__scenario_serializer.serialize(data)
