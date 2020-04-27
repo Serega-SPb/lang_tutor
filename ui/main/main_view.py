@@ -59,7 +59,7 @@ class MainView(QWidget):
 
     def translate_ui(self):
         ui = self.ui
-        translator = Translator.get_translator('main')
+        self.translator = Translator.get_translator('main')
         widgets = [ui.label, ui.label_2, ui.label_3, ui.label_4, ui.label_5,
                    ui.scenarioMenuBtn, ui.editorMenuBtn, ui.modulesMenuBtn,
                    ui.configMenuBtn, ui.debugMenuBtn, ui.quitMenuBtn, ui.optionsEnableChbx,
@@ -68,7 +68,7 @@ class MainView(QWidget):
                    ui.scenarioListRefreshBtn, ui.modulesListRefreshBtn,
                    ui.label_6, ui.label_7, ui.label_8, ui.label_9, ui.label_10,
                    ui.applySettingsBtn, ui.cancelSettingsBtn, ui.warningGrBx]
-        [translate_widget(w, translator) for w in widgets]
+        [translate_widget(w, self.translator) for w in widgets]
 
     def init_ui(self):
         self.ui.debugMenuBtn.setVisible(self.is_debug)
@@ -191,11 +191,13 @@ class MainView(QWidget):
         self.ui.applySettingsBtn.setDisabled(value)
 
     def select_modules_dir(self):
-        self.select_dir('SELECT_MODULES_DIR', self.model.modules_dir,
+        title = self.translator.translate('SELECT_MODULES_DIR_TEXT')
+        self.select_dir(title, self.model.modules_dir,
                         self.controller.set_modules_dir)
 
     def select_scenarios_dir(self):
-        self.select_dir('SELECT_SCENARIOS_DIR', self.model.scenarios_dir,
+        title = self.translator.translate('SELECT_SCENARIOS_DIR_TEXT')
+        self.select_dir(title, self.model.scenarios_dir,
                         self.controller.set_scenario_dir)
 
     def select_dir(self, title, start_dir, set_action):
