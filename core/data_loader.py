@@ -1,4 +1,5 @@
 import os
+import sys
 import logging
 import json
 
@@ -14,6 +15,7 @@ from . import module_manager
 
 
 class Constants:
+    DEBUG_FLAG = '-d'
     LOCALE = 'locale'
     MODULES = 'modules'
     MODULE = 'module'
@@ -21,6 +23,7 @@ class Constants:
     QUESTION_TYPE = 'question_type'
     MODULES_DIR = 'modules_dir'
     SCENARIOS_DIR = 'scenarios_dir'
+    OPTIONS_ENABLED_PARAM = 'ui.options_enabled'
 
 
 class DataLoader(metaclass=Singleton):
@@ -38,6 +41,7 @@ class DataLoader(metaclass=Singleton):
         self.load_config()
         self.load_modules()
         self.load_scenarios()
+        self.is_debug = Constants.DEBUG_FLAG in sys.argv
 
     @property
     def modules_dir(self):
@@ -121,6 +125,8 @@ class DataLoader(metaclass=Singleton):
             raise NotADirectoryError('Scenario directory not found')
 
         for f in os.listdir(sc_dir):
+            if not f.endswith(".json"):
+                continue
             self.__load_scenario(os.path.join(sc_dir, f))
 
     @try_except_wrapper

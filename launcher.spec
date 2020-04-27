@@ -34,7 +34,7 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False)
 
 
 shutil.copyfile('config.yaml', '{0}/config.yaml'.format(DISTPATH))

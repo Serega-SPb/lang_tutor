@@ -66,6 +66,7 @@ class AppManager(metaclass=Singleton):
         CrossWidgetEvents.change_screen_event += self.select_active_widget
         CrossWidgetEvents.show_message_event += self.show_info_msb
         CrossWidgetEvents.show_question_event += self.show_question_msb
+        CrossWidgetEvents.clsoe_main_window_event += self.main_window.close
 
     def get_main_window(self):
         return self.main_window

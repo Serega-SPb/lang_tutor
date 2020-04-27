@@ -10,6 +10,10 @@ class Locales:
     ENGLISH = 'en'
     RUSSIAN = 'ru'
 
+    @staticmethod
+    def get_locales():
+        return Locales.ENGLISH, Locales.RUSSIAN
+
 
 class Translator:
 
